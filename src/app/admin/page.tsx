@@ -17,15 +17,17 @@ export default function AdminPage() {
 
   useEffect(() => {
     const isLoading = isUserLoading || isAdminDataLoading;
-    if (!isLoading) {
-      // If not loading and there's no authenticated user, redirect to login
-      if (!user) {
-        router.push('/login');
-      } 
-      // If user is logged in but their document does not exist in roles_admin, redirect to home
-      else if (!adminData) {
-        router.push('/');
-      }
+    if (isLoading) {
+      return; // Do nothing while loading
+    }
+    
+    // If not loading and there's no authenticated user, redirect to login
+    if (!user) {
+      router.push('/login');
+    } 
+    // If user is logged in but their document does not exist in roles_admin, redirect to home
+    else if (!adminData) {
+      router.push('/');
     }
   }, [user, adminData, isUserLoading, isAdminDataLoading, router]);
 
