@@ -8,12 +8,79 @@ import {
 } from '@/components/ui/accordion';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { Download, Book, Calendar, Building, School } from 'lucide-react';
+import { Download, Book, Calendar, Building, School, Briefcase, Landmark, BookCopy, Mic, Cog, Users } from 'lucide-react';
 
-// Placeholder data for University of Bamenda structure
+// Updated and comprehensive data for University of Bamenda structure
 const ubaData = [
   {
-    school: 'Faculty of Health Sciences',
+    school: 'College of Technology (COLTECH)',
+    icon: <Cog className="w-5 h-5 text-primary" />,
+    departments: [
+      {
+        name: 'Computer Engineering',
+        documents: [],
+      },
+      {
+        name: 'Agribusiness Technology',
+        documents: [],
+      },
+    ],
+  },
+  {
+    school: 'Faculty of Science (FOS)',
+    icon: <School className="w-5 h-5 text-primary" />,
+    departments: [
+      {
+        name: 'Computer Science',
+        documents: [
+          { id: 'uba-fs-csc-1', title: 'Data Structures & Algorithms', year: '2023', code: 'CSC 201' },
+          { id: 'uba-fs-csc-2', title: 'Operating Systems', year: '2022', code: 'CSC 303' },
+        ],
+      },
+      {
+        name: 'Mathematics',
+        documents: [
+          { id: 'uba-fs-mat-1', title: 'Linear Algebra II', year: '2023', code: 'MAT 302' },
+        ],
+      },
+      {
+        name: 'Physics',
+        documents: [],
+      },
+      {
+        name: 'Chemistry',
+        documents: [],
+      },
+    ],
+  },
+  {
+    school: 'Faculty of Economics and Management Sciences (FEMS)',
+    icon: <Briefcase className="w-5 h-5 text-primary" />,
+    departments: [
+        { name: 'Economics', documents: [] },
+        { name: 'Management', documents: [] },
+        { name: 'Accounting', documents: [] },
+    ],
+  },
+  {
+    school: 'Faculty of Arts',
+    icon: <BookCopy className="w-5 h-5 text-primary" />,
+    departments: [
+        { name: 'English', documents: [] },
+        { name: 'History', documents: [] },
+        { name: 'Linguistics', documents: [] },
+    ],
+  },
+  {
+    school: 'Faculty of Education',
+    icon: <Users className="w-5 h-5 text-primary" />,
+    departments: [
+        { name: 'Curriculum Studies and Teaching', documents: [] },
+        { name: 'Educational Psychology', documents: [] },
+    ],
+  },
+  {
+    school: 'Faculty of Health Sciences (FHS)',
     icon: <Building className="w-5 h-5 text-primary" />,
     departments: [
       {
@@ -32,27 +99,17 @@ const ubaData = [
       },
     ],
   },
-  {
-    school: 'Faculty of Science',
-    icon: <School className="w-5 h-5 text-primary" />,
+   {
+    school: 'Faculty of Law and Political Science (FLPS)',
+    icon: <Landmark className="w-5 h-5 text-primary" />,
     departments: [
-      {
-        name: 'Computer Science',
-        documents: [
-          { id: 'uba-fs-csc-1', title: 'Data Structures & Algorithms', year: '2023', code: 'CSC 201' },
-          { id: 'uba-fs-csc-2', title: 'Operating Systems', year: '2022', code: 'CSC 303' },
-        ],
-      },
-      {
-        name: 'Mathematics',
-        documents: [
-          { id: 'uba-fs-mat-1', title: 'Linear Algebra II', year: '2023', code: 'MAT 302' },
-        ],
-      },
+        { name: 'Private Law', documents: [] },
+        { name: 'Public Law', documents: [] },
+        { name: 'Political Science', documents: [] },
     ],
   },
-   {
-    school: 'Higher Technical Teacher Training College (HTTTC)',
+  {
+    school: 'Higher Teacher Training College (HTTC / ENS Bamenda)',
     icon: <Building className="w-5 h-5 text-primary" />,
     departments: [
       {
@@ -70,6 +127,53 @@ const ubaData = [
       },
     ],
   },
+  {
+    school: 'National Higher Polytechnic Institute (NAHPI)',
+    icon: <Building className="w-5 h-5 text-primary" />,
+    departments: [
+        { name: 'Mechanical Engineering', documents: [] },
+        { name: 'Petroleum Engineering', documents: [] },
+    ],
+  },
+  {
+    school: 'School of Journalism and Mass Communication (ASMAC)',
+    icon: <Mic className="w-5 h-5 text-primary" />,
+    departments: [
+        { name: 'Print Journalism', documents: [] },
+        { name: 'Broadcast Journalism', documents: [] },
+    ],
+  },
+  {
+    school: 'Higher Institute of Commerce and Management (HICM)',
+    icon: <Building className="w-5 h-5 text-primary" />,
+    departments: [
+        { name: 'Marketing', documents: [] },
+        { name: 'Banking and Finance', documents: [] },
+    ],
+  },
+  {
+    school: 'School of Transport and Logistics',
+    icon: <Building className="w-5 h-5 text-primary" />,
+    departments: [
+        { name: 'Logistics and Supply Chain Management', documents: [] },
+    ],
+  },
+  {
+    school: 'School of Tourism and Hospitality Management',
+    icon: <Building className="w-5 h-5 text-primary" />,
+    departments: [
+        { name: 'Hotel Management', documents: [] },
+        { name: 'Tourism Management', documents: [] },
+    ],
+  },
+  {
+    school: 'Institute of Agricultural Research and Development (IARD – affiliated)',
+    icon: <Building className="w-5 h-5 text-primary" />,
+    departments: [
+        { name: 'Crop Production', documents: [] },
+        { name: 'Animal Production', documents: [] },
+    ],
+  },
 ];
 
 export default function UbaPage() {
@@ -78,15 +182,15 @@ export default function UbaPage() {
       <div className="flex flex-col gap-y-2">
         <h1 className="text-3xl font-bold tracking-tight">University of Bamenda</h1>
         <p className="text-muted-foreground">
-          Browse past questions by faculty and department.
+          Browse past questions by school and department.
         </p>
       </div>
 
       <Card>
         <CardHeader>
-          <CardTitle>Faculties & Departments</CardTitle>
+          <CardTitle>Schools & Departments</CardTitle>
           <CardDescription>
-            Expand a faculty to see its departments and available documents.
+            Expand a school to see its departments and available documents.
           </CardDescription>
         </CardHeader>
         <CardContent>
