@@ -1,15 +1,16 @@
 
 'use client';
 
-import { useUser, useFirestore, useDoc, useMemoFirebase } from '@/firebase';
+import { useUser, useFirestore, useDoc, useMemoFirebase, useAuth } from '@/firebase';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 import { doc } from 'firebase/firestore';
 import { Skeleton } from '@/components/ui/skeleton';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { GraduationCap, Wallet } from 'lucide-react';
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { GraduationCap, LogOut, Wallet, MessageSquare } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
+import { signOut } from 'firebase/auth';
 
 // Explicitly type the user object based on your backend.json entity
 type UserData = {
@@ -22,6 +23,14 @@ type UserData = {
 };
 
 function ActivationPage() {
+    const auth = useAuth();
+    const router = useRouter();
+
+    const handleLogout = () => {
+        signOut(auth);
+        router.push('/login');
+    };
+
     return (
         <div className="container mx-auto py-12 px-4 flex items-center justify-center">
             <Card className="w-full max-w-lg">
@@ -40,20 +49,38 @@ function ActivationPage() {
                         <p className="text-4xl font-bold">500 XAF</p>
                     </div>
                     <div className="space-y-4 rounded-lg border bg-card p-4">
-                        <h3 className="font-semibold">Payment Instructions:</h3>
+                        <h3 className="font-semibold">Step 1: Payment</h3>
                         <p className="text-muted-foreground">
-                            Please send the activation fee via Mobile Money to the following details:
+                            Please send the activation fee via Mobile Money to:
                         </p>
                         <ul className="space-y-2 text-sm">
                             <li><strong className="font-medium">Provider:</strong> MTN Mobile Money</li>
                             <li><strong className="font-medium">Number:</strong> 654834766</li>
                             <li><strong className="font-medium">Name:</strong> Maisa Elangwe Theophilus</li>
                         </ul>
+                    </div>
+                     <div className="space-y-4 rounded-lg border bg-card p-4">
+                        <h3 className="font-semibold">Step 2: Verification</h3>
+                        <p className="text-muted-foreground">
+                           After payment, send a screenshot of the transaction via WhatsApp for verification:
+                        </p>
+                        <ul className="space-y-2 text-sm">
+                             <li>
+                                <MessageSquare className="inline-block w-4 h-4 mr-2" />
+                                <strong className="font-medium">WhatsApp Number:</strong> +237 680 312 275
+                            </li>
+                        </ul>
                         <p className="text-xs text-muted-foreground pt-2">
-                            After payment, your account will be activated by an administrator, usually within 24 hours. You will be notified via email.
+                           An administrator will activate your account upon confirmation. This usually takes less than 24 hours.
                         </p>
                     </div>
                 </CardContent>
+                <CardFooter>
+                    <Button variant="outline" className="w-full" onClick={handleLogout}>
+                        <LogOut className="mr-2 h-4 w-4" />
+                        Logout
+                    </Button>
+                </CardFooter>
             </Card>
         </div>
     );
