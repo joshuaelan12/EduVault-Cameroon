@@ -18,23 +18,31 @@ export default function AdminPage() {
 
   // Redirect logic
   useEffect(() => {
-    if (!isUserLoading && !isAdminLoading) {
-      if (!user) {
-        router.push('/login');
-      } else if (!isAdmin) {
-        router.push('/');
-      }
+    // Wait until both user and admin status are fully loaded
+    if (isUserLoading || isAdminLoading) {
+      return; // Do nothing while loading
     }
+
+    // If loading is finished, then we can safely check the user's status
+    if (!user) {
+      // If there's no user, redirect to login
+      router.push('/login');
+    } else if (!isAdmin) {
+      // If the user is logged in but is NOT an admin, redirect to the homepage
+      router.push('/');
+    }
+    // If the user exists and is an admin, this effect does nothing, and the page is rendered.
   }, [user, isUserLoading, isAdmin, isAdminLoading, router]);
 
   const usersQuery = useMemoFirebase(() => {
+    // Only query for users if the current user is an admin
     if (!isAdmin) return null;
     return collection(firestore, 'users');
   }, [firestore, isAdmin]);
 
   const { data: users, isLoading: usersLoading } = useCollection(usersQuery);
 
-  // Loading state
+  // Show a loading skeleton while we verify the user and their role
   if (isUserLoading || isAdminLoading) {
     return (
       <div className="container mx-auto px-4 py-8">
@@ -48,6 +56,7 @@ export default function AdminPage() {
   }
 
   // Render content only if the user is an admin
+  // This prevents any brief flicker of admin content for non-admin users before redirection
   if (!isAdmin) {
     return null;
   }
