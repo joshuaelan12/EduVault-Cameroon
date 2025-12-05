@@ -47,7 +47,7 @@ export default function AdminLayout({
     router.push('/login');
   };
   
-  if (isUserLoading || isAdminLoading || !isAdmin) {
+  if (isUserLoading || isAdminLoading) {
     return (
         <div className="flex h-screen w-full items-center justify-center">
             <div className="flex flex-col items-center gap-4">
@@ -56,6 +56,12 @@ export default function AdminLayout({
             </div>
         </div>
     )
+  }
+
+  if (!isAdmin) {
+    // This will be caught by the useEffect, but as a fallback,
+    // we can show a message or just null.
+    return null;
   }
 
   return (
