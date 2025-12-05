@@ -10,19 +10,20 @@
  * stored in separate top-level collections.
  *
  * Key Security Decisions:
- * - Admin Roles: A user is considered an admin if their UID exists as a document ID
- *   in the `/roles_admin` collection. This "existence over content" check is fast
- *   and secure.
+ * - Admin Roles: A user is considered an admin if their UID exists in Firebase
+ *   Authentication but they do NOT have a corresponding document in the `/users`
+ *   collection. This is a secure way to differentiate roles.
  * - User Data Privacy: All collections under `/users/{userId}` are strictly limited
  *   to the owner of that data tree, with admins having oversight capabilities.
  * - No User Enumeration: Listing documents in the top-level `/users` collection
- *   is forbidden to prevent attackers from discovering user IDs, though admins can list them.
+ *   is forbidden for regular users to prevent attackers from discovering user IDs,
+ *   though admins can list them.
  * - Segregated Data: Publicly readable data (e.g., `/announcements`) is kept in
  *   separate collections from private user data, which simplifies list queries and
  *   secures private information by default.
  * - Denormalization for Authorization: The rules rely on the path structure
- *   (`/users/{userId}`) and the `/roles_admin` collection for authorization checks,
- *   avoiding slow and costly `get()` calls in most rules.
+ *   (`/users/{userId}`) and the admin-check function for authorization, avoiding
+ *   slow and costly `get()` calls in most rules.
  * - Write Integrity: On creation, documents inside a user's data tree (e.g., a
  *   payment) must contain a `userId` field that matches the path, ensuring relational
  *   integrity. This field is then enforced as immutable on updates.
@@ -60,11 +61,11 @@ service cloud.firestore {
     }
 
     /**
-     * Checks if the authenticated user has admin privileges by looking for
-     * their UID in the '/roles_admin' collection.
+     * Checks if the authenticated user has admin privileges. An admin is a user
+     * that exists in Firebase Auth but does NOT have a document in the /users collection.
      */
     function isAdmin() {
-      return isSignedIn() && exists(/databases/$(database)/documents/roles_admin/$(request.auth.uid));
+      return isSignedIn() && !exists(/databases/$(database)/documents/users/$(request.auth.uid));
     }
 
     /**
@@ -183,18 +184,10 @@ service cloud.firestore {
     // Administrative & System Collections
     // --------------------------------------------------------------------------------
 
-    /**
-     * @description Stores admin user roles. Existence of a doc grants admin rights.
-     *              A user can check their own admin status.
-     * @path /roles_admin/{userId}
-     * @allow (get) A user `user_xyz` checks if they are an admin by reading `/roles_admin/user_xyz`.
-     * @deny (get) User `user_abc` tries to read `/roles_admin/user_xyz`.
-     * @principle Role-Based Access Control (RBAC) for managing site administrators.
-     */
+    // This collection is no longer used for admin checks but is left for historical reference.
+    // Admin access is now determined by the `isAdmin()` function logic.
     match /roles_admin/{userId} {
-      allow get: if isOwner(userId) || isAdmin();
-      allow list: if isAdmin();
-      allow create, update, delete: if isAdmin();
+      allow get, list, create, update, delete: if isAdmin();
     }
 
     /**
