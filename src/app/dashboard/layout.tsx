@@ -4,11 +4,22 @@ import { useUser, useFirestore, useDoc, useMemoFirebase, useAuth } from '@/fireb
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 import { doc } from 'firebase/firestore';
-import { Skeleton } from '@/components/ui/skeleton';
-import { Button } from '@/components/ui/button';
-import { signOut } from 'firebase/auth';
-import { GraduationCap, LogOut } from 'lucide-react';
+import { GraduationCap, LogOut, School, BookOpen } from 'lucide-react';
+import {
+  SidebarProvider,
+  Sidebar,
+  SidebarHeader,
+  SidebarContent,
+  SidebarTrigger,
+  SidebarMenu,
+  SidebarMenuItem,
+  SidebarMenuButton,
+  SidebarFooter,
+  SidebarInset,
+} from '@/components/ui/sidebar';
 import Link from 'next/link';
+import { Button } from '@/components/ui/button';
+import { getAuth, signOut } from 'firebase/auth';
 
 type UserData = {
   fullName: string;
@@ -54,23 +65,68 @@ export default function DashboardLayout({
   }
 
   return (
-    <div className="min-h-screen w-full bg-muted/40">
-      <header className="sticky top-0 z-30 flex h-14 items-center gap-4 border-b bg-background px-4 sm:static sm:h-auto sm:border-0 sm:bg-transparent sm:px-6">
-        <Link href="/dashboard" className="flex items-center gap-2 font-semibold">
+    <SidebarProvider>
+      <Sidebar>
+        <SidebarHeader>
+          <div className="flex items-center gap-2">
             <GraduationCap className="h-6 w-6 text-primary" />
-            <span className="">EduVault</span>
-        </Link>
-        <div className="ml-auto flex items-center gap-4">
-          <span className="font-medium text-sm text-muted-foreground hidden sm:inline-block">
-            {userData?.fullName || user?.email}
-          </span>
-          <Button onClick={handleLogout} variant="outline" size="icon">
-            <LogOut className="h-4 w-4" />
-            <span className="sr-only">Logout</span>
+            <span className="font-semibold text-lg">EduVault</span>
+          </div>
+        </SidebarHeader>
+        <SidebarContent>
+          <SidebarMenu>
+            <SidebarMenuItem>
+              <SidebarMenuButton href="/dashboard/gce" asChild>
+                <Link href="/dashboard/gce">
+                  <BookOpen />
+                  GCE Past Questions
+                </Link>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+            <SidebarMenuItem>
+              <SidebarMenuButton href="/dashboard/uba" asChild>
+                <Link href="/dashboard/uba">
+                  <School />
+                  Univ. of Bamenda
+                </Link>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+             <SidebarMenuItem>
+              <SidebarMenuButton href="/dashboard/ub" asChild>
+                <Link href="/dashboard/ub">
+                  <School />
+                  Univ. of Buea
+                </Link>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+          </SidebarMenu>
+        </SidebarContent>
+        <SidebarFooter>
+          <Button onClick={handleLogout} variant="outline" className="w-full justify-start gap-2">
+            <LogOut />
+            Logout
           </Button>
-        </div>
-      </header>
-      <main className="p-4 sm:px-6 sm:py-0">{children}</main>
-    </div>
+        </SidebarFooter>
+      </Sidebar>
+      <SidebarInset>
+        <header className="flex h-14 items-center justify-between border-b bg-background px-4 md:justify-end">
+            <Link href="/dashboard" className="flex items-center gap-2 font-semibold md:hidden">
+                <GraduationCap className="h-6 w-6 text-primary" />
+                <span className="">EduVault</span>
+            </Link>
+            <SidebarTrigger className="md:hidden">
+                <span className="sr-only">Toggle Menu</span>
+            </SidebarTrigger>
+             <div className="hidden md:flex items-center gap-4">
+                <span className="font-semibold text-sm">{userData?.fullName || user?.email}</span>
+                 <Button onClick={handleLogout} variant="outline" size="icon">
+                    <LogOut className="h-4 w-4" />
+                    <span className="sr-only">Logout</span>
+                 </Button>
+             </div>
+        </header>
+        <div className="flex-1 overflow-y-auto p-4 md:p-6">{children}</div>
+      </SidebarInset>
+    </SidebarProvider>
   );
 }
