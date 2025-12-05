@@ -123,8 +123,12 @@ const ubaData = [
     school: 'National Higher Polytechnic Institute (NAHPI)',
     icon: <Building className="w-5 h-5 text-primary" />,
     departments: [
-        { name: 'Mechanical Engineering', documents: [] },
-        { name: 'Petroleum Engineering', documents: [] },
+        { name: 'Civil Engineering Technology', documents: [] },
+        { name: 'Electrical Engineering Technology', documents: [] },
+        { name: 'Mechanical Engineering Technology', documents: [] },
+        { name: 'Information and Communication Technology (ICT)', documents: [] },
+        { name: 'Building Technology', documents: [] },
+        { name: 'Transport and Logistics Technology', documents: [] },
     ],
   },
   {
