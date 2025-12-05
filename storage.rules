@@ -1,0 +1,20 @@
+rules_version = '2';
+
+service firebase.storage {
+  match /b/{bucket}/o {
+
+    // Default deny all reads and writes
+    match /{allPaths=**} {
+      allow read, write: if false;
+    }
+
+    // Allow read (download) access to the 'documents' folder for any authenticated user.
+    // In a real app, you would tighten this rule to check if the user's account is active.
+    // For example: `if request.auth != null && exists(/databases/(default)/documents/users/$(request.auth.uid)) && get(/databases/(default)/documents/users/$(request.auth.uid)).data.isActive == true;`
+    match /documents/{documentId} {
+      allow read: if request.auth != null;
+      // Write access should be restricted, typically to admins through a backend function
+      allow write: if false; 
+    }
+  }
+}
