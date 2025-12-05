@@ -64,12 +64,10 @@ function ActivationPage() {
                         <p className="text-muted-foreground">
                            After payment, send a screenshot of the transaction via WhatsApp for verification:
                         </p>
-                        <ul className="space-y-2 text-sm">
-                             <li>
-                                <MessageSquare className="inline-block w-4 h-4 mr-2" />
-                                <strong className="font-medium">WhatsApp Number:</strong> +237 680 312 275
-                            </li>
-                        </ul>
+                         <a href="https://wa.me/237680312275" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-sm font-medium text-primary hover:underline">
+                            <MessageSquare className="inline-block w-4 h-4" />
+                            <span>+237 680 312 275</span>
+                        </a>
                         <p className="text-xs text-muted-foreground pt-2">
                            An administrator will activate your account upon confirmation. This usually takes less than 24 hours.
                         </p>

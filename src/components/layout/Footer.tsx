@@ -6,9 +6,22 @@ export default function Footer() {
   return (
     <footer className="border-t">
       <div className="container flex flex-col items-center justify-between gap-4 py-10 md:h-24 md:flex-row md:py-0">
-        <div className="flex flex-col items-center gap-4 px-8 md:flex-row md:gap-2 md:px-0">
-          <p className="text-center text-sm leading-loose text-muted-foreground md:text-left">
+        <div className="flex flex-col items-center gap-4 px-8 text-center md:flex-row md:gap-2 md:px-0 md:text-left">
+          <p className="text-sm leading-loose text-muted-foreground">
             &copy; {currentYear} EduVault Cameroon. All rights reserved.
+          </p>
+           <span className="hidden md:inline-block">|</span>
+           <p className="text-sm text-muted-foreground">
+            Developed by{' '}
+            <a
+              href="https://techknow237.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-medium underline underline-offset-4"
+            >
+              Techknow
+            </a>
+            .
           </p>
         </div>
         <div className="flex items-center gap-4">

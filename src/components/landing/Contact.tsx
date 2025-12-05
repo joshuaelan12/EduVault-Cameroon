@@ -21,20 +21,20 @@ export default function Contact() {
             </CardHeader>
             <CardContent>
               <p className="text-muted-foreground">For any support or inquiries.</p>
-              <a href="mailto:support@eduvault.cm" className="text-primary font-medium hover:underline">
-                support@eduvault.cm
+              <a href="mailto:techknow237@gmail.com" className="text-primary font-medium hover:underline">
+                techknow237@gmail.com
               </a>
             </CardContent>
           </Card>
           <Card className="bg-card/50">
             <CardHeader className="flex flex-row items-center gap-4 pb-2">
               <Phone className="w-6 h-6 text-primary" />
-              <CardTitle className="text-xl">Call Us</CardTitle>
+              <CardTitle className="text-xl">WhatsApp Us</CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="text-muted-foreground">Mon - Fri, 9am - 5pm.</p>
-              <a href="tel:+237670000000" className="text-primary font-medium hover:underline">
-                +237 670 000 000
+              <p className="text-muted-foreground">For quick inquiries & support.</p>
+              <a href="https://wa.me/237680312275" target="_blank" rel="noopener noreferrer" className="text-primary font-medium hover:underline">
+                +237 680 312 275
               </a>
             </CardContent>
           </Card>
