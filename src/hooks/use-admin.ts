@@ -11,8 +11,7 @@ interface UseAdminResult {
 
 /**
  * A hook to determine if the current user has admin privileges.
- * It checks for the existence of a document in the 'roles_admin' collection
- * with the user's UID as the document ID.
+ * It checks if the `role` field in the user's document is set to 'admin'.
  *
  * @returns {UseAdminResult} An object containing the admin status and loading state.
  */
@@ -21,14 +20,17 @@ export function useAdmin(): UseAdminResult {
   const firestore = useFirestore();
 
   // Memoize the document reference to prevent re-renders
-  const adminDocRef = useMemoFirebase(() => {
+  const userDocRef = useMemoFirebase(() => {
     if (!user?.uid) return null;
-    return doc(firestore, 'roles_admin', user.uid);
+    return doc(firestore, 'users', user.uid);
   }, [firestore, user?.uid]);
   
-  const { data: adminDoc, isLoading: isDocLoading } = useDoc(adminDocRef);
+  const { data: userDoc, isLoading: isDocLoading } = useDoc(userDocRef);
 
-  const isAdmin = useMemo(() => !!adminDoc, [adminDoc]);
+  const isAdmin = useMemo(() => {
+    // Check if the user document exists and if the role is 'admin'
+    return userDoc?.role === 'admin';
+  }, [userDoc]);
 
   return {
     isAdmin,
