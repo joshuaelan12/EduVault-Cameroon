@@ -3,12 +3,10 @@
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
-import { Menu, GraduationCap, LogOut, User as UserIcon, Shield } from 'lucide-react';
+import { Menu, GraduationCap, Shield } from 'lucide-react';
 import { useState } from 'react';
-import { useUser, useFirestore, useDoc, useMemoFirebase } from '@/firebase';
+import { useUser } from '@/firebase';
 import { useAdmin } from '@/hooks/use-admin';
-import { getAuth, signOut } from 'firebase/auth';
-import { doc } from 'firebase/firestore';
 
 const navLinks = [
   { href: '#exams', label: 'Exams' },
@@ -20,20 +18,6 @@ export default function Header() {
   const [isSheetOpen, setIsSheetOpen] = useState(false);
   const { user, isUserLoading } = useUser();
   const { isAdmin } = useAdmin();
-  const auth = getAuth();
-  const firestore = useFirestore();
-
-  const userDocRef = useMemoFirebase(() => {
-    if (!user || isAdmin) return null;
-    return doc(firestore, 'users', user.uid);
-  }, [firestore, user, isAdmin]);
-
-  const { data: userProfile } = useDoc(userDocRef);
-
-
-  const handleLogout = () => {
-    signOut(auth);
-  };
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -52,7 +36,8 @@ export default function Header() {
               {link.label}
             </Link>
           ))}
-          {isAdmin && (
+          {/* Admin link will only show if the user is an admin */}
+          {!isUserLoading && user && isAdmin && (
             <Link
               href="/admin"
               className="transition-colors hover:text-foreground/80 text-foreground font-semibold"
@@ -64,26 +49,12 @@ export default function Header() {
         </nav>
         <div className="flex flex-1 items-center justify-end space-x-4">
           <div className="hidden md:flex items-center space-x-2">
-            {!isUserLoading && user ? (
-              <>
-                <Button variant="ghost" >
-                  <UserIcon className="mr-2 h-4 w-4" />
-                  {userProfile?.fullName || user.email}
-                </Button>
-                <Button onClick={handleLogout} variant="outline">
-                  <LogOut className="mr-2 h-4 w-4" /> Logout
-                </Button>
-              </>
-            ) : !isUserLoading && (
-              <>
-                <Button variant="ghost" asChild>
-                  <Link href="/login">Login</Link>
-                </Button>
-                <Button asChild>
-                  <Link href="/register">Register</Link>
-                </Button>
-              </>
-            )}
+            <Button variant="ghost" asChild>
+              <Link href="/login">Login</Link>
+            </Button>
+            <Button asChild>
+              <Link href="/register">Register</Link>
+            </Button>
           </div>
           <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
             <SheetTrigger asChild>
@@ -111,7 +82,8 @@ export default function Header() {
                       {link.label}
                     </Link>
                   ))}
-                   {isAdmin && (
+                  {/* Admin link for mobile */}
+                  {!isUserLoading && user && isAdmin && (
                     <Link
                       href="/admin"
                       className="text-lg font-medium text-foreground"
@@ -123,20 +95,12 @@ export default function Header() {
                   )}
                 </div>
                 <div className="mt-auto flex flex-col space-y-2">
-                  {!isUserLoading && user ? (
-                     <Button onClick={() => { handleLogout(); setIsSheetOpen(false); }} variant="outline">
-                        <LogOut className="mr-2 h-4 w-4" /> Logout
-                      </Button>
-                  ) : !isUserLoading && (
-                    <>
-                      <Button variant="outline" asChild>
-                        <Link href="/login" onClick={() => setIsSheetOpen(false)}>Login</Link>
-                      </Button>
-                      <Button asChild>
-                        <Link href="/register" onClick={() => setIsSheetOpen(false)}>Register</Link>
-                      </Button>
-                    </>
-                  )}
+                  <Button variant="outline" asChild>
+                    <Link href="/login" onClick={() => setIsSheetOpen(false)}>Login</Link>
+                  </Button>
+                  <Button asChild>
+                    <Link href="/register" onClick={() => setIsSheetOpen(false)}>Register</Link>
+                  </Button>
                 </div>
               </div>
             </SheetContent>
