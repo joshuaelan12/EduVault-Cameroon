@@ -1,7 +1,7 @@
 'use client';
 
 import { useUser, useFirestore, useDoc, useMemoFirebase, useAuth } from '@/firebase';
-import { useRouter } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 import { doc } from 'firebase/firestore';
 import { GraduationCap, LogOut, School, BookOpen } from 'lucide-react';
@@ -33,6 +33,7 @@ export default function DashboardLayout({
 }) {
   const { user, isUserLoading } = useUser();
   const router = useRouter();
+  const pathname = usePathname();
   const firestore = useFirestore();
   const auth = useAuth();
 
@@ -44,14 +45,21 @@ export default function DashboardLayout({
   const { data: userData, isLoading: isDocLoading } = useDoc<UserData>(userDocRef);
 
   useEffect(() => {
-    if (!isUserLoading && !user) {
-      router.push('/login');
+    const isLoading = isUserLoading || isDocLoading;
+    if (isLoading) return; // Wait for all data to be loaded
+
+    if (!user) {
+      router.replace('/login');
+      return;
     }
-    // If the user data has loaded and the user is not active, redirect them.
-    if (!isDocLoading && userData && !userData.isActive) {
-      router.push('/dashboard');
+
+    // If the user's data is loaded and they are not active,
+    // and they are trying to access a page other than the main dashboard page,
+    // redirect them back to the main dashboard page to see the activation prompt.
+    if (userData && !userData.isActive && pathname !== '/dashboard') {
+      router.replace('/dashboard');
     }
-  }, [user, isUserLoading, userData, isDocLoading, router]);
+  }, [user, userData, isUserLoading, isDocLoading, router, pathname]);
 
   const handleLogout = () => {
     signOut(auth);
@@ -59,7 +67,8 @@ export default function DashboardLayout({
   };
 
   // Show a loading screen while we verify the user's auth and activation status.
-  if (isUserLoading || isDocLoading) {
+  const isLoading = isUserLoading || isDocLoading;
+  if (isLoading || !user) {
     return (
       <div className="flex h-screen w-full items-center justify-center bg-background">
         <div className="flex flex-col items-center gap-4">
@@ -70,9 +79,18 @@ export default function DashboardLayout({
     );
   }
   
-  // If user is not active, we render null while the redirect happens.
-  if (!userData?.isActive) {
-    return null;
+  // If a user is not active and is on a protected page, the useEffect will redirect.
+  // We render the children (or null if they get redirected) but prevent access to the full UI.
+  // The main /dashboard page has its own logic to show the activation prompt.
+  if (userData && !userData.isActive && pathname !== '/dashboard') {
+    return (
+        <div className="flex h-screen w-full items-center justify-center bg-background">
+            <div className="flex flex-col items-center gap-4">
+                <GraduationCap className="h-12 w-12 animate-pulse text-primary" />
+                <p className="text-muted-foreground">Redirecting...</p>
+            </div>
+        </div>
+    );
   }
 
   return (
