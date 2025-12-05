@@ -2,8 +2,8 @@
 
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
-import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
-import { Menu, GraduationCap, User as UserIcon } from 'lucide-react';
+import { Sheet, SheetContent, SheetTrigger, VisuallyHidden } from '@/components/ui/sheet';
+import { Menu, GraduationCap } from 'lucide-react';
 import { useState } from 'react';
 import { useUser } from '@/firebase';
 import { useAdmin } from '@/hooks/use-admin';
@@ -39,23 +39,12 @@ export default function Header() {
         </nav>
         <div className="flex flex-1 items-center justify-end space-x-4">
           <div className="hidden md:flex items-center space-x-2">
-            {!isUserLoading && user ? (
-               <Button variant="secondary" asChild>
-                  <Link href={isAdmin ? "/admin" : "/dashboard"}>
-                    <UserIcon className="mr-2 h-4 w-4" />
-                    My Account
-                  </Link>
-              </Button>
-            ) : (
-              <>
-                <Button variant="ghost" asChild>
-                  <Link href="/login">Login</Link>
-                </Button>
-                <Button asChild>
-                  <Link href="/register">Register</Link>
-                </Button>
-              </>
-            )}
+            <Button variant="ghost" asChild>
+              <Link href="/login">Login</Link>
+            </Button>
+            <Button asChild>
+              <Link href="/register">Register</Link>
+            </Button>
           </div>
           <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
             <SheetTrigger asChild>
@@ -65,6 +54,7 @@ export default function Header() {
               </Button>
             </SheetTrigger>
             <SheetContent side="right" className="w-[300px] sm:w-[400px]">
+              <VisuallyHidden>Mobile Navigation</VisuallyHidden>
               <div className="flex flex-col h-full">
                 <div className="flex items-center mb-8">
                   <Link href="/" className="mr-6 flex items-center space-x-2" onClick={() => setIsSheetOpen(false)}>

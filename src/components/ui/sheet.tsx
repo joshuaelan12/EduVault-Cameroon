@@ -126,6 +126,24 @@ const SheetDescription = React.forwardRef<
 ))
 SheetDescription.displayName = SheetPrimitive.Description.displayName
 
+const VisuallyHidden = React.forwardRef<
+  HTMLElement,
+  SheetPrimitive.DialogTitleProps
+>((props, ref) => {
+  return (
+    <SheetPrimitive.Title
+      ref={ref as React.Ref<HTMLHeadingElement>}
+      {...props}
+      className={cn(
+        'absolute w-px h-px p-0 m-[-1px] overflow-hidden whitespace-nowrap border-0',
+        props.className
+      )}
+    />
+  );
+});
+VisuallyHidden.displayName = 'VisuallyHidden';
+
+
 export {
   Sheet,
   SheetPortal,
@@ -137,4 +155,5 @@ export {
   SheetFooter,
   SheetTitle,
   SheetDescription,
+  VisuallyHidden
 }
