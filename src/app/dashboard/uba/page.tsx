@@ -167,8 +167,10 @@ const ubaData = [
     school: 'School of Tourism and Hospitality Management',
     icon: <Building className="w-5 h-5 text-primary" />,
     departments: [
-        { name: 'Hotel Management', documents: [] },
         { name: 'Tourism Management', documents: [] },
+        { name: 'Hotel Management', documents: [] },
+        { name: 'Event Management', documents: [] },
+        { name: 'Catering and Hospitality Services', documents: [] },
     ],
   },
   {
