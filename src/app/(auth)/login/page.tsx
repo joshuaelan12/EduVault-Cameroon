@@ -7,6 +7,7 @@ import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { initiateEmailSignIn } from "@/firebase/non-blocking-login";
 import { useAuth, useUser } from "@/firebase";
+import { useAdmin } from "@/hooks/use-admin";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -21,14 +22,19 @@ export default function LoginPage() {
   const { toast } = useToast();
   const router = useRouter();
   const { user, isUserLoading } = useUser();
+  const { isAdmin, isAdminLoading } = useAdmin();
 
   const authImage = PlaceHolderImages.find(p => p.id === 'auth-image');
 
   useEffect(() => {
-    if (!isUserLoading && user) {
-      router.push('/');
+    if (!isUserLoading && !isAdminLoading && user) {
+      if (isAdmin) {
+        router.push('/admin');
+      } else {
+        router.push('/');
+      }
     }
-  }, [user, isUserLoading, router]);
+  }, [user, isUserLoading, isAdmin, isAdminLoading, router]);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -43,7 +49,7 @@ export default function LoginPage() {
         description: error.message,
       });
     } finally {
-      // setLoading(false);
+      // setLoading(false); // Let the redirect handle the UI state
     }
   };
 
