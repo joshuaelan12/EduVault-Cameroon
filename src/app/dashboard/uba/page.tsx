@@ -1,4 +1,3 @@
-
 'use client';
 
 import {
@@ -69,6 +68,8 @@ const ubaData = [
     departments: [
         { name: 'Curriculum Studies and Teaching', documents: [] },
         { name: 'Educational Psychology', documents: [] },
+        { name: 'Measurement and Evaluation', documents: [] },
+        { name: 'Educational Administration and Planning', documents: [] },
     ],
   },
   {
