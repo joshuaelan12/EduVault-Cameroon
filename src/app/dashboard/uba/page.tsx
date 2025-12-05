@@ -135,8 +135,10 @@ const ubaData = [
     school: 'School of Journalism and Mass Communication (ASMAC)',
     icon: <Mic className="w-5 h-5 text-primary" />,
     departments: [
-        { name: 'Print Journalism', documents: [] },
+        { name: 'Journalism', documents: [] },
+        { name: 'Communication Studies', documents: [] },
         { name: 'Broadcast Journalism', documents: [] },
+        { name: 'Digital Media and Communication', documents: [] },
     ],
   },
   {
