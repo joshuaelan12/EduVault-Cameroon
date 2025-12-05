@@ -23,6 +23,7 @@ import { getAuth, signOut } from 'firebase/auth';
 
 type UserData = {
   fullName: string;
+  isActive: boolean;
 };
 
 export default function DashboardLayout({
@@ -46,13 +47,18 @@ export default function DashboardLayout({
     if (!isUserLoading && !user) {
       router.push('/login');
     }
-  }, [user, isUserLoading, router]);
+    // If the user data has loaded and the user is not active, redirect them.
+    if (!isDocLoading && userData && !userData.isActive) {
+      router.push('/dashboard');
+    }
+  }, [user, isUserLoading, userData, isDocLoading, router]);
 
   const handleLogout = () => {
     signOut(auth);
     router.push('/login');
   };
 
+  // Show a loading screen while we verify the user's auth and activation status.
   if (isUserLoading || isDocLoading) {
     return (
       <div className="flex h-screen w-full items-center justify-center bg-background">
@@ -62,6 +68,11 @@ export default function DashboardLayout({
         </div>
       </div>
     );
+  }
+  
+  // If user is not active, we render null while the redirect happens.
+  if (!userData?.isActive) {
+    return null;
   }
 
   return (
