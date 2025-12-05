@@ -1,0 +1,71 @@
+# **App Name**: EduVault Cameroon
+
+## Core Features:
+
+- Public Landing Page: Show site purpose, hero CTA, exam categories (GCE, University of Buea, University of Bamenda), pricing, FAQs, contact details, and links to Login/Register.
+- Registration Form: Allow users to sign up with full name, email, phone (Cameroon format), and password; store user record in users collection with role='student' and is_active=false.
+- Email Verification: Send verification email after registration and mark email_verified flag in users record when confirmed.
+- Password Reset: Allow users to request a password reset email and update password securely after token validation.
+- Login: Authenticate users with email+password, return secure session or JWT, and deny access if is_active=false.
+- User Account Creation: Allow students to create accounts with their details.
+- Landing Page: Dedicated landing page for general app information.
+- Payment Integration: Integrate a payment gateway for account activation fee (500frs).
+- Past Question Access: Provide access to a library of past questions upon successful payment and account activation.
+- Admin Dashboard: Create an admin dashboard to activate user accounts upon payment confirmation.
+- Question Paper Categorization: Organize past questions by exam type (GCE, University of Bamenda, University of Buea, etc.).
+- Content Moderation: AI-powered tool that monitors the content and informs the admins of copyright violations or incorrectly filed documents.
+- Account Activation Flow: After registration set status to 'pending' and require a 200 XAF activation payment before setting is_active=true.
+- Manual Payment Proof Upload: Allow users to upload a payment screenshot as proof, store proof_url in payments collection and set payment.status='pending'.
+- Payments Collection: Store payment documents with fields: userId, amount, currency, provider, providerRef, status (pending/confirmed/failed), proofUrl, createdAt, updatedAt.
+- Admin Payment Verification: Admins can review pending payments, mark payment.status='confirmed', and update corresponding user.is_active=true.
+- Payment Provider Integration (future): Provide webhook endpoint to accept automated confirmations from MTN/Orange and reconcile payments automatically.
+- Role-based Access Control: Define roles 'student', 'admin', 'super_admin' and enforce role checks on admin-only functions and endpoints.
+- Admin Dashboard Access: Admin users can login and access an admin dashboard listing users, pending payments, documents, and analytics.
+- Document Upload: Admins can upload past-question PDF files to storage with metadata fields: title, examType, subject, year, level, tags, visibility.
+- Documents Collection: Store document metadata in a documents collection with storagePath, fileSize, uploadedBy, downloadsCount, createdAt.
+- Object Storage: Save PDFs in cloud storage (Firebase Storage) under path examType/subject/year/filename.pdf and protect files from direct public listing.
+- Presigned Download Links: Generate time-limited download URLs for authenticated, activated users when they request a download.
+- Download Tracking: Log each download as a downloads record with userId, documentId, timestamp and increment documents.downloadsCount atomically.
+- Search & Filters: Implement search by keyword plus filters for examType, subject, year range, and level using Firestore indexes or Algolia/Meilisearch.
+- Pagination: Support pagination on document lists using cursor-based pagination for scalable queries.
+- Rate Limiting: Enforce per-user download and API rate limits (e.g., requests/downloads per minute/day) to prevent abuse; track usage in rateLimits collection.
+- Bulk Upload: Allow admin to upload zip + CSV to create multiple document metadata records and store each PDF into storage automatically.
+- Document Versioning: When admin uploads a new version, keep previous file path or record a versions array with version notes and createdAt.
+- Document Visibility: Support visibility enum (public, private) and enforce access control so only active students can access private docs.
+- User Profile: Allow users to view and update their profile fields (name, phone) and view activation/payment status and download history.
+- Admin User Management: Admins can view users list, filter by status (pending/active/suspended), change roles, and suspend or delete accounts.
+- Audit Logs: Record admin actions (user activation, payment confirmation, document deletion) in auditLogs collection with actorId, action, metadata, timestamp.
+- Notifications: Send emails for registration, payment received, account activated, password reset; store notification records for in-app alerts.
+- Announcements: Admins can create site-wide announcements (title, message, startAt, endAt) displayed on the user dashboard.
+- Analytics Events: Track events: registration, payment_initiated, payment_confirmed, document_uploaded, document_downloaded; store counts per day in analytics collection.
+- Reporting Dashboard: Admins can view KPIs: total users, active users, pending activations, revenue today/week/month, top downloaded subjects.
+- Security: Enforce HTTPS, validate uploaded files for PDF MIME/type, limit file size, and scan for malware where possible.
+- Password Security: Hash passwords securely (bcrypt/argon2), require strong passwords, and do not store plaintext passwords in Firestore.
+- Backup & Restore: Periodic export of Firestore and Storage to backups collection/storage with timestamps for disaster recovery.
+- Terms & Privacy: Provide a legal TOS and privacy doc; store acceptance flag on user record when they register.
+- DMCA/Takedown Workflow: Admins can receive takedown requests and mark documents as under_review or removed; track reason and requester contact.
+- Config Collection: Store global settings in config document: activationFee (200), currency (XAF), paymentProviders, maintenanceMode boolean.
+- Email Templates: Store email templates in templates collection (registration, activation, payment confirmation, password reset) for easy updates.
+- Webhooks Collection: Save validated webhook events from payment providers for reconciliation and auditing with referenced paymentId, providerRef, payload, receivedAt.
+- Transaction Reconciliation: Periodically match payment provider confirmations to payments collection and mark unmatched items for manual review.
+- Access Logs: Store API access logs (userId or anonId, endpoint, ip, timestamp) to monitor suspicious activity and support troubleshooting.
+- Internationalization: Support languages; default English + option to add French for Cameroon students; store locale on user profile.
+- Multi-tenant Exam Taxonomy: Store examTypes collection (name, slug, description) and subject collection (name, code, aliases) for consistent metadata.
+- Subject Synonyms: Allow subject aliases mapping so search for 'Maths' or 'Mathematics' returns the same documents; store synonyms in subjects collection.
+- Watermarking (optional): Optionally generate and store watermarked copies of PDFs for download to limit unauthorized redistribution.
+- Throttled Public Preview: Allow unauthenticated users to view a short preview or first page of a document but require account+activation for full download.
+- Scheduled Jobs: Use Cloud Functions / Cloud Tasks to run scheduled jobs: cleanup old presigned links, recalc analytics, and send daily summary emails.
+- Role Audit: Keep role change history so super_admin can see when admins were created or given elevated privileges.
+- Two-Factor Auth (optional): Support optional 2FA using email or SMS for admin accounts to boost security.
+- Price Change History: When activationFee changes, store change history with effectiveDate and adminId who changed it.
+- Onboarding Checklist: Provide a first-time user checklist (verify email, pay 500 XAF, wait for activation) visible until account is active.
+
+## Style Guidelines:
+
+- Primary color: Deep blue (#1E3A8A), evoking trust and reliability.
+- Background color: Very light blue (#F0F9FF), providing a clean and calm backdrop.
+- Accent color: Vibrant orange (#EA580C) for calls to action and important highlights.
+- Body and headline font: 'Inter' sans-serif, providing a modern, neutral look suitable for both headlines and body text.
+- Use clear, consistent icons for exam types and subjects.
+- Simple, intuitive navigation for easy access to different exams and universities.
+- Subtle transitions and loading animations to enhance user experience.
