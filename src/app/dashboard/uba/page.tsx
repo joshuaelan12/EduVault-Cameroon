@@ -158,7 +158,9 @@ const ubaData = [
     school: 'School of Transport and Logistics',
     icon: <Building className="w-5 h-5 text-primary" />,
     departments: [
+        { name: 'Transport Management', documents: [] },
         { name: 'Logistics and Supply Chain Management', documents: [] },
+        { name: 'Port and Shipping Management', documents: [] },
     ],
   },
   {
