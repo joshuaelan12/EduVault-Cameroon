@@ -137,7 +137,7 @@ const ubaData = [
     icon: <Mic className="w-5 h-5 text-primary" />,
     departments: [
         { name: 'Print Journalism', documents: [] },
-        { name 'Broadcast Journalism', documents: [] },
+        { name: 'Broadcast Journalism', documents: [] },
     ],
   },
   {
