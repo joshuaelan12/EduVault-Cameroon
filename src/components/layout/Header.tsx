@@ -3,8 +3,10 @@
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
-import { Menu, GraduationCap } from 'lucide-react';
+import { Menu, GraduationCap, LogOut, User as UserIcon, Shield } from 'lucide-react';
 import { useState } from 'react';
+import { useUser } from '@/firebase';
+import { getAuth, signOut } from 'firebase/auth';
 
 const navLinks = [
   { href: '#exams', label: 'Exams' },
@@ -14,6 +16,12 @@ const navLinks = [
 
 export default function Header() {
   const [isSheetOpen, setIsSheetOpen] = useState(false);
+  const { user, isUserLoading } = useUser();
+  const auth = getAuth();
+
+  const handleLogout = () => {
+    signOut(auth);
+  };
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -32,15 +40,32 @@ export default function Header() {
               {link.label}
             </Link>
           ))}
+           <Link href="/admin" className="transition-colors hover:text-foreground/80 text-foreground/60 flex items-center gap-1">
+             <Shield size={16} /> Admin
+            </Link>
         </nav>
         <div className="flex flex-1 items-center justify-end space-x-4">
           <div className="hidden md:flex items-center space-x-2">
-            <Button variant="ghost" asChild>
-              <Link href="/login">Login</Link>
-            </Button>
-            <Button asChild>
-              <Link href="/register">Register</Link>
-            </Button>
+            {!isUserLoading && user ? (
+              <>
+                <Button variant="ghost" >
+                  <UserIcon className="mr-2 h-4 w-4" />
+                  {user.email}
+                </Button>
+                <Button onClick={handleLogout} variant="outline">
+                  <LogOut className="mr-2 h-4 w-4" /> Logout
+                </Button>
+              </>
+            ) : !isUserLoading && (
+              <>
+                <Button variant="ghost" asChild>
+                  <Link href="/login">Login</Link>
+                </Button>
+                <Button asChild>
+                  <Link href="/register">Register</Link>
+                </Button>
+              </>
+            )}
           </div>
           <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
             <SheetTrigger asChild>
@@ -68,14 +93,25 @@ export default function Header() {
                       {link.label}
                     </Link>
                   ))}
+                  <Link href="/admin" className="text-lg font-medium text-foreground/80 flex items-center gap-2" onClick={() => setIsSheetOpen(false)}>
+                    <Shield size={20} /> Admin
+                  </Link>
                 </div>
                 <div className="mt-auto flex flex-col space-y-2">
-                  <Button variant="outline" asChild>
-                    <Link href="/login" onClick={() => setIsSheetOpen(false)}>Login</Link>
-                  </Button>
-                  <Button asChild>
-                    <Link href="/register" onClick={() => setIsSheetOpen(false)}>Register</Link>
-                  </Button>
+                  {!isUserLoading && user ? (
+                     <Button onClick={() => { handleLogout(); setIsSheetOpen(false); }} variant="outline">
+                        <LogOut className="mr-2 h-4 w-4" /> Logout
+                      </Button>
+                  ) : !isUserLoading && (
+                    <>
+                      <Button variant="outline" asChild>
+                        <Link href="/login" onClick={() => setIsSheetOpen(false)}>Login</Link>
+                      </Button>
+                      <Button asChild>
+                        <Link href="/register" onClick={() => setIsSheetOpen(false)}>Register</Link>
+                      </Button>
+                    </>
+                  )}
                 </div>
               </div>
             </SheetContent>
