@@ -76,6 +76,7 @@ const ubaData = [
     school: 'Faculty of Health Sciences (FHS)',
     icon: <Building className="w-5 h-5 text-primary" />,
     departments: [
+      { name: 'Medicine', documents: [] },
       {
         name: 'Nursing',
         documents: [
@@ -83,6 +84,7 @@ const ubaData = [
           { id: 'uba-fhs-nur-2', title: 'Pharmacology', year: '2022', code: 'NUR 305' },
         ],
       },
+      { name: 'Midwifery', documents: [] },
       {
         name: 'Medical Laboratory Sciences',
         documents: [
@@ -90,6 +92,8 @@ const ubaData = [
           { id: 'uba-fhs-mls-2', title: 'Hematology I', year: '2022', code: 'MLS 211' },
         ],
       },
+      { name: 'Public Health', documents: [] },
+      { name: 'Pharmacy', documents: [] },
     ],
   },
    {
@@ -133,7 +137,7 @@ const ubaData = [
     icon: <Mic className="w-5 h-5 text-primary" />,
     departments: [
         { name: 'Print Journalism', documents: [] },
-        { name: 'Broadcast Journalism', documents: [] },
+        { name 'Broadcast Journalism', documents: [] },
     ],
   },
   {
