@@ -55,7 +55,11 @@ const ubaData = [
     icon: <BookCopy className="w-5 h-5 text-primary" />,
     departments: [
         { name: 'English', documents: [] },
+        { name: 'French', documents: [] },
         { name: 'History', documents: [] },
+        { name: 'Geography', documents: [] },
+        { name: 'Philosophy', documents: [] },
+        { name: 'Sociology', documents: [] },
         { name: 'Linguistics', documents: [] },
     ],
   },
