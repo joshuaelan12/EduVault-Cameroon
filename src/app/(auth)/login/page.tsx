@@ -31,7 +31,7 @@ export default function LoginPage() {
       if (isAdmin) {
         router.push('/admin');
       } else {
-        router.push('/');
+        router.push('/dashboard');
       }
     }
   }, [user, isUserLoading, isAdmin, isAdminLoading, router]);

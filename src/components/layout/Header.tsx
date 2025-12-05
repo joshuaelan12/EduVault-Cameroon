@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
-import { Menu, GraduationCap, Shield } from 'lucide-react';
+import { Menu, GraduationCap, User as UserIcon } from 'lucide-react';
 import { useState } from 'react';
 import { useUser } from '@/firebase';
 import { useAdmin } from '@/hooks/use-admin';
@@ -36,25 +36,26 @@ export default function Header() {
               {link.label}
             </Link>
           ))}
-          {/* Admin link will only show if the user is an admin */}
-          {!isUserLoading && user && isAdmin && (
-            <Link
-              href="/admin"
-              className="transition-colors hover:text-foreground/80 text-foreground font-semibold"
-            >
-              <Shield className="mr-2 h-4 w-4 inline-block" />
-              Admin
-            </Link>
-          )}
         </nav>
         <div className="flex flex-1 items-center justify-end space-x-4">
           <div className="hidden md:flex items-center space-x-2">
-            <Button variant="ghost" asChild>
-              <Link href="/login">Login</Link>
-            </Button>
-            <Button asChild>
-              <Link href="/register">Register</Link>
-            </Button>
+            {!isUserLoading && user ? (
+               <Button variant="secondary" asChild>
+                  <Link href={isAdmin ? "/admin" : "/dashboard"}>
+                    <UserIcon className="mr-2 h-4 w-4" />
+                    My Account
+                  </Link>
+              </Button>
+            ) : (
+              <>
+                <Button variant="ghost" asChild>
+                  <Link href="/login">Login</Link>
+                </Button>
+                <Button asChild>
+                  <Link href="/register">Register</Link>
+                </Button>
+              </>
+            )}
           </div>
           <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
             <SheetTrigger asChild>
@@ -82,25 +83,24 @@ export default function Header() {
                       {link.label}
                     </Link>
                   ))}
-                  {/* Admin link for mobile */}
-                  {!isUserLoading && user && isAdmin && (
-                    <Link
-                      href="/admin"
-                      className="text-lg font-medium text-foreground"
-                      onClick={() => setIsSheetOpen(false)}
-                    >
-                      <Shield className="mr-2 h-4 w-4 inline-block" />
-                      Admin
-                    </Link>
-                  )}
                 </div>
                 <div className="mt-auto flex flex-col space-y-2">
-                  <Button variant="outline" asChild>
-                    <Link href="/login" onClick={() => setIsSheetOpen(false)}>Login</Link>
-                  </Button>
-                  <Button asChild>
-                    <Link href="/register" onClick={() => setIsSheetOpen(false)}>Register</Link>
-                  </Button>
+                   {!isUserLoading && user ? (
+                     <Button asChild>
+                        <Link href={isAdmin ? "/admin" : "/dashboard"} onClick={() => setIsSheetOpen(false)}>
+                          My Account
+                        </Link>
+                    </Button>
+                   ) : (
+                    <>
+                      <Button variant="outline" asChild>
+                        <Link href="/login" onClick={() => setIsSheetOpen(false)}>Login</Link>
+                      </Button>
+                      <Button asChild>
+                        <Link href="/register" onClick={() => setIsSheetOpen(false)}>Register</Link>
+                      </Button>
+                    </>
+                   )}
                 </div>
               </div>
             </SheetContent>
