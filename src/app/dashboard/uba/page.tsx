@@ -109,19 +109,14 @@ const ubaData = [
     school: 'Higher Teacher Training College (HTTC / ENS Bamenda)',
     icon: <Building className="w-5 h-5 text-primary" />,
     departments: [
-      {
-        name: 'Civil Engineering',
-        documents: [
-          { id: 'uba-htc-civ-1', title: 'Strength of Materials', year: '2023', code: 'CEE 203' },
-          { id: 'uba-htc-civ-2', title: 'Structural Analysis', year: '2022', code: 'CEE 301' },
-        ],
-      },
-      {
-        name: 'Electrical Engineering',
-        documents: [
-          { id: 'uba-htc-eee-1', title: 'Circuit Theory II', year: '2023', code: 'EEE 201' },
-        ],
-      },
+      { name: 'Mathematics Education', documents: [] },
+      { name: 'Physics Education', documents: [] },
+      { name: 'Chemistry Education', documents: [] },
+      { name: 'Biology Education', documents: [] },
+      { name: 'English Education', documents: [] },
+      { name: 'French Education', documents: [] },
+      { name: 'History Education', documents: [] },
+      { name: 'Geography Education', documents: [] },
     ],
   },
   {
