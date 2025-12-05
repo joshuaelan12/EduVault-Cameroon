@@ -11,34 +11,41 @@ export default function AdminPage() {
   const firestore = useFirestore();
   const router = useRouter();
 
-  const userDocRef = user ? doc(firestore, 'users', user.uid) : null;
-  const { data: userData, isLoading: isUserDataLoading } = useDoc(userDocRef);
+  // Check for the user's document in the roles_admin collection to determine admin status
+  const adminDocRef = user ? doc(firestore, 'roles_admin', user.uid) : null;
+  const { data: adminData, isLoading: isAdminDataLoading } = useDoc(adminDocRef);
 
   useEffect(() => {
-    const isLoading = isUserLoading || isUserDataLoading;
+    const isLoading = isUserLoading || isAdminDataLoading;
     if (!isLoading) {
+      // If not loading and there's no authenticated user, redirect to login
       if (!user) {
         router.push('/login');
-      } else if (userData && (userData as any).role !== 'admin') {
+      } 
+      // If user is logged in but their document does not exist in roles_admin, redirect to home
+      else if (!adminData) {
         router.push('/');
       }
     }
-  }, [user, userData, isUserLoading, isUserDataLoading, router]);
+  }, [user, adminData, isUserLoading, isAdminDataLoading, router]);
 
-  const isLoading = isUserLoading || isUserDataLoading;
+  const isLoading = isUserLoading || isAdminDataLoading;
 
   if (isLoading) {
     return (
       <div className="flex items-center justify-center h-screen">
-        <p>Loading...</p>
+        <p>Loading & verifying access...</p>
       </div>
     );
   }
 
-  if (!user || (userData && (userData as any).role !== 'admin')) {
-    return null; // Or a more explicit "access denied" component
+  // If still loading or the user is not an admin, render nothing to prevent content flash.
+  // The useEffect will handle the redirect.
+  if (!user || !adminData) {
+    return null;
   }
-
+  
+  // Render admin content only if user is authenticated and is an admin
   return (
     <div className="container mx-auto py-12 px-4">
       <h1 className="text-4xl font-bold mb-8">Admin Dashboard</h1>
