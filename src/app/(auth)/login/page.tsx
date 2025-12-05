@@ -48,8 +48,7 @@ export default function LoginPage() {
         title: "Login Failed",
         description: error.message,
       });
-    } finally {
-      // setLoading(false); // Let the redirect handle the UI state
+      setLoading(false);
     }
   };
 
@@ -82,15 +81,7 @@ export default function LoginPage() {
                 <Input id="email" type="email" placeholder="m@example.com" required value={email} onChange={(e) => setEmail(e.target.value)} />
               </div>
               <div className="grid gap-2">
-                <div className="flex items-center">
-                  <Label htmlFor="password">Password</Label>
-                  <Link
-                    href="#"
-                    className="ml-auto inline-block text-sm underline"
-                  >
-                    Forgot your password?
-                  </Link>
-                </div>
+                <Label htmlFor="password">Password</Label>
                 <Input id="password" type="password" required value={password} onChange={(e) => setPassword(e.target.value)} />
               </div>
             </CardContent>

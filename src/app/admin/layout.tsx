@@ -49,12 +49,12 @@ export default function AdminLayout({
   
   if (isUserLoading || isAdminLoading) {
     return (
-        <div className="flex h-screen w-full items-center justify-center">
-            <div className="flex flex-col items-center gap-4">
-                <GraduationCap className="h-12 w-12 animate-pulse text-primary" />
-                <p className="text-muted-foreground">Verifying access...</p>
-            </div>
-        </div>
+      <div className="flex h-screen w-full items-center justify-center bg-background">
+          <div className="flex flex-col items-center gap-4">
+              <GraduationCap className="h-12 w-12 animate-pulse text-primary" />
+              <p className="text-muted-foreground">Verifying access...</p>
+          </div>
+      </div>
     )
   }
 
@@ -93,14 +93,21 @@ export default function AdminLayout({
         </SidebarFooter>
       </Sidebar>
       <SidebarInset>
-        <header className="flex h-14 items-center justify-between border-b bg-background px-4 md:hidden">
-            <Link href="/" className="flex items-center gap-2 font-semibold">
+        <header className="flex h-14 items-center justify-between border-b bg-background px-4 md:justify-end">
+            <Link href="/" className="flex items-center gap-2 font-semibold md:hidden">
                 <GraduationCap className="h-6 w-6 text-primary" />
                 <span className="">EduVault</span>
             </Link>
-            <SidebarTrigger>
+            <SidebarTrigger className="md:hidden">
                 <span className="sr-only">Toggle Menu</span>
             </SidebarTrigger>
+             <div className="hidden md:flex items-center gap-4">
+                <span className="font-semibold">{user?.email}</span>
+                 <Button onClick={handleLogout} variant="outline" size="icon">
+                    <LogOut className="h-4 w-4" />
+                    <span className="sr-only">Logout</span>
+                 </Button>
+             </div>
         </header>
         <div className="flex-1 overflow-y-auto p-4 md:p-6">{children}</div>
       </SidebarInset>

@@ -5,9 +5,10 @@ import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { Menu, GraduationCap, LogOut, User as UserIcon, Shield } from 'lucide-react';
 import { useState } from 'react';
-import { useUser } from '@/firebase';
+import { useUser, useFirestore, useDoc, useMemoFirebase } from '@/firebase';
 import { useAdmin } from '@/hooks/use-admin';
 import { getAuth, signOut } from 'firebase/auth';
+import { doc } from 'firebase/firestore';
 
 const navLinks = [
   { href: '#exams', label: 'Exams' },
@@ -20,6 +21,15 @@ export default function Header() {
   const { user, isUserLoading } = useUser();
   const { isAdmin } = useAdmin();
   const auth = getAuth();
+  const firestore = useFirestore();
+
+  const userDocRef = useMemoFirebase(() => {
+    if (!user || isAdmin) return null;
+    return doc(firestore, 'users', user.uid);
+  }, [firestore, user, isAdmin]);
+
+  const { data: userProfile } = useDoc(userDocRef);
+
 
   const handleLogout = () => {
     signOut(auth);
@@ -58,7 +68,7 @@ export default function Header() {
               <>
                 <Button variant="ghost" >
                   <UserIcon className="mr-2 h-4 w-4" />
-                  {user.email}
+                  {userProfile?.fullName || user.email}
                 </Button>
                 <Button onClick={handleLogout} variant="outline">
                   <LogOut className="mr-2 h-4 w-4" /> Logout
