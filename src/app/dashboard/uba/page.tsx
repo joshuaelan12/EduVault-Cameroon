@@ -29,27 +29,12 @@ const ubaData = [
     school: 'Faculty of Science (FOS)',
     icon: <School className="w-5 h-5 text-primary" />,
     departments: [
-      {
-        name: 'Computer Science',
-        documents: [
-          { id: 'uba-fs-csc-1', title: 'Data Structures & Algorithms', year: '2023', code: 'CSC 201' },
-          { id: 'uba-fs-csc-2', title: 'Operating Systems', year: '2022', code: 'CSC 303' },
-        ],
-      },
-      {
-        name: 'Mathematics',
-        documents: [
-          { id: 'uba-fs-mat-1', title: 'Linear Algebra II', year: '2023', code: 'MAT 302' },
-        ],
-      },
-      {
-        name: 'Physics',
-        documents: [],
-      },
-      {
-        name: 'Chemistry',
-        documents: [],
-      },
+        { name: 'Mathematics', documents: [] },
+        { name: 'Physics', documents: [] },
+        { name: 'Chemistry', documents: [] },
+        { name: 'Computer Science', documents: [] },
+        { name: 'Biological Sciences', documents: [] },
+        { name: 'Environmental Science', documents: [] },
     ],
   },
   {
