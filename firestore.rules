@@ -1,0 +1,366 @@
+/**
+ * Core Philosophy: This ruleset enforces a hybrid security model. It combines a strict
+ * user-ownership model for all personal data with a role-based access control (RBAC)
+ * system for administrative functions and global data management.
+ *
+ * Data Structure: All user-specific data (payments, documents, notifications, etc.)
+ * is hierarchically nested under the `/users/{userId}` path. This structure provides
+ * a clear and performant way to secure user data. Global data (like announcements,
+ * configurations, and exam types) and administrative data (like audit logs) are
+ * stored in separate top-level collections.
+ *
+ * Key Security Decisions:
+ * - Admin Roles: A user is considered an admin if their UID exists as a document ID
+ *   in the `/roles_admin` collection. This "existence over content" check is fast
+ *   and secure.
+ * - User Data Privacy: All collections under `/users/{userId}` are strictly limited
+ *   to the owner of that data tree, with admins having oversight capabilities.
+ * - No User Enumeration: Listing documents in the top-level `/users` collection
+ *   is explicitly forbidden to prevent attackers from discovering user IDs.
+ * - Segregated Data: Publicly readable data (e.g., `/announcements`) is kept in
+ *   separate collections from private user data, which simplifies list queries and
+ *   secures private information by default.
+ * - Denormalization for Authorization: The rules rely on the path structure
+ *   (`/users/{userId}`) and the `/roles_admin` collection for authorization checks,
+ *   avoiding slow and costly `get()` calls in most rules.
+ * - Write Integrity: On creation, documents inside a user's data tree (e.g., a
+ *   payment) must contain a `userId` field that matches the path, ensuring relational
+ *   integrity. This field is then enforced as immutable on updates.
+ */
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // --------------------------------------------------------------------------------
+    // Helper Functions
+    // --------------------------------------------------------------------------------
+
+    /**
+     * Checks if the user is authenticated.
+     */
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    /**
+     * Checks if the requesting user's UID matches the provided userId.
+     * This is the foundation of the user-ownership model.
+     * @param userId The UID to check against the authenticated user.
+     */
+    function isOwner(userId) {
+      return request.auth.uid == userId;
+    }
+
+    /**
+     * Checks if the document being accessed already exists.
+     * Crucial for preventing updates or deletes on non-existent documents.
+     */
+    function isExistingDoc() {
+      return resource != null;
+    }
+
+    /**
+     * Checks if the authenticated user has admin privileges by looking for
+     * their UID in the '/roles_admin' collection.
+     */
+    function isAdmin() {
+      return isSignedIn() && exists(/databases/$(database)/documents/roles_admin/$(request.auth.uid));
+    }
+
+    /**
+     * On CREATE operations, validates that a specific field in the incoming
+     * document's data matches a value from the document's path.
+     * This enforces relational integrity from client-side writes.
+     * @param pathId The ID from the document path (e.g., userId).
+     * @param dataFieldName The name of the field to check in the request data.
+     */
+    function incomingDataMatchesPathId(pathId, dataFieldName) {
+      return request.resource.data[dataFieldName] == pathId;
+    }
+
+    /**
+     * On UPDATE operations, validates that a critical relational ID field
+     * has not been changed.
+     * @param dataFieldName The name of the field to check for immutability.
+     */
+    function internalIdIsImmutable(dataFieldName) {
+      return request.resource.data[dataFieldName] == resource.data[dataFieldName];
+    }
+
+
+    // --------------------------------------------------------------------------------
+    // User Data Collections
+    // --------------------------------------------------------------------------------
+
+    /**
+     * @description Manages user profile documents. Users can create and manage their
+     *              own profile. Admins have full oversight. Listing users is disabled.
+     * @path /users/{userId}
+     * @allow (create) A new user `auth.uid: 'user_123'` creates their own document at `/users/user_123`.
+     * @deny (get) User `user_abc` tries to read the profile of `user_xyz`.
+     * @principle Restricts access to a user's own data tree and enforces self-creation.
+     */
+    match /users/{userId} {
+      allow get: if isOwner(userId) || isAdmin();
+      allow list: if false;
+      allow create: if isOwner(userId) && incomingDataMatchesPathId(userId, 'id');
+      allow update: if (isOwner(userId) || isAdmin()) && isExistingDoc() && internalIdIsImmutable('id');
+      allow delete: if (isOwner(userId) || isAdmin()) && isExistingDoc();
+
+      /**
+       * @description User's uploaded documents. Only the owner or an admin can manage them.
+       * @path /users/{userId}/documents/{documentId}
+       * @allow (create) User `user_123` creates a new document in their own subcollection.
+       * @deny (list) User `user_abc` tries to list documents belonging to `user_xyz`.
+       * @principle Enforces strict ownership for all nested user data.
+       */
+      match /documents/{documentId} {
+        allow get, list: if isOwner(userId) || isAdmin();
+        allow create: if isOwner(userId) && incomingDataMatchesPathId(userId, 'uploadedBy');
+        allow update: if (isOwner(userId) || isAdmin()) && isExistingDoc() && internalIdIsImmutable('uploadedBy');
+        allow delete: if (isOwner(userId) || isAdmin()) && isExistingDoc();
+      }
+
+      /**
+       * @description User's payment records. Only the owner or an admin can access them.
+       * @path /users/{userId}/payments/{paymentId}
+       * @allow (get) User `user_123` reads their own payment record.
+       * @deny (create) User `user_abc` tries to create a payment record for `user_xyz`.
+       * @principle Enforces strict ownership for all nested user data.
+       */
+      match /payments/{paymentId} {
+        allow get, list: if isOwner(userId) || isAdmin();
+        allow create: if isOwner(userId) && incomingDataMatchesPathId(userId, 'userId');
+        allow update: if (isOwner(userId) || isAdmin()) && isExistingDoc() && internalIdIsImmutable('userId');
+        allow delete: if (isOwner(userId) || isAdmin()) && isExistingDoc();
+      }
+
+      /**
+       * @description User's download history. Only the owner or an admin can access it.
+       * @path /users/{userId}/downloads/{downloadId}
+       * @allow (list) User `user_123` lists their own download history.
+       * @deny (get) User `user_abc` tries to read a download record for `user_xyz`.
+       * @principle Enforces strict ownership for all nested user data.
+       */
+      match /downloads/{downloadId} {
+        allow get, list: if isOwner(userId) || isAdmin();
+        allow create: if isOwner(userId) && incomingDataMatchesPathId(userId, 'userId');
+        allow update: if (isOwner(userId) || isAdmin()) && isExistingDoc() && internalIdIsImmutable('userId');
+        allow delete: if (isOwner(userId) || isAdmin()) && isExistingDoc();
+      }
+
+      /**
+       * @description User-specific rate limit data. Only the owner or an admin can access it.
+       * @path /users/{userId}/rateLimits/{rateLimitId}
+       * @allow (get) Admin reads the rate limit data for `user_123`.
+       * @deny (update) User `user_abc` tries to change the rate limit for `user_xyz`.
+       * @principle Enforces strict ownership for all nested user data.
+       */
+      match /rateLimits/{rateLimitId} {
+        allow get, list: if isOwner(userId) || isAdmin();
+        allow create: if isOwner(userId) && incomingDataMatchesPathId(userId, 'userId');
+        allow update: if (isOwner(userId) || isAdmin()) && isExistingDoc() && internalIdIsImmutable('userId');
+        allow delete: if (isOwner(userId) || isAdmin()) && isExistingDoc();
+      }
+
+      /**
+       * @description User notifications. Only the owner or an admin can access them.
+       * @path /users/{userId}/notifications/{notificationId}
+       * @allow (list) User `user_123` lists their own notifications.
+       * @deny (delete) User `user_abc` tries to delete a notification for `user_xyz`.
+       * @principle Enforces strict ownership for all nested user data.
+       */
+      match /notifications/{notificationId} {
+        allow get, list: if isOwner(userId) || isAdmin();
+        allow create: if isOwner(userId) && incomingDataMatchesPathId(userId, 'userId');
+        allow update: if (isOwner(userId) || isAdmin()) && isExistingDoc() && internalIdIsImmutable('userId');
+        allow delete: if (isOwner(userId) || isAdmin()) && isExistingDoc();
+      }
+    }
+
+
+    // --------------------------------------------------------------------------------
+    // Administrative & System Collections
+    // --------------------------------------------------------------------------------
+
+    /**
+     * @description Stores admin user roles. Existence of a doc grants admin rights.
+     * @path /roles_admin/{userId}
+     * @allow (create) An admin grants admin rights to user `user_xyz`.
+     * @deny (delete) A non-admin user tries to remove an admin's role.
+     * @principle Role-Based Access Control (RBAC) for managing site administrators.
+     */
+    match /roles_admin/{userId} {
+      allow get, list: if isAdmin();
+      allow create, update, delete: if isAdmin();
+    }
+
+    /**
+     * @description Publicly readable announcements. Only admins can create or modify them.
+     * @path /announcements/{announcementId}
+     * @allow (list) Any user, signed-in or not, can list all announcements.
+     * @deny (create) A regular signed-in user tries to create a new announcement.
+     * @principle Public read access for global data, with admin-only write controls.
+     */
+    match /announcements/{announcementId} {
+      allow get, list: if true;
+      allow create: if isAdmin();
+      allow update, delete: if isAdmin() && isExistingDoc();
+    }
+
+    /**
+     * @description Publicly readable configuration data. Only admins can change settings.
+     * @path /config/{configId}
+     * @allow (get) Any client can read the app's configuration settings.
+     * @deny (update) A non-admin user tries to change the `activationFee`.
+     * @principle Public read access for global data, with admin-only write controls.
+     */
+    match /config/{configId} {
+      allow get, list: if true;
+      allow create: if isAdmin();
+      allow update, delete: if isAdmin() && isExistingDoc();
+    }
+    
+    /**
+     * @description Publicly readable exam types. Only admins can manage this data.
+     * @path /examTypes/{examTypeId}
+     * @allow (list) Any user can list the available exam types.
+     * @deny (create) A non-admin user tries to add a new exam type.
+     * @principle Public read access for global data, with admin-only write controls.
+     */
+    match /examTypes/{examTypeId} {
+      allow get, list: if true;
+      allow create: if isAdmin();
+      allow update, delete: if isAdmin() && isExistingDoc();
+    }
+    
+    /**
+     * @description Publicly readable subjects. Only admins can manage this data.
+     * @path /subjects/{subjectId}
+     * @allow (get) Any user can retrieve a specific subject's data.
+     * @deny (update) A non-admin user tries to change a subject's name.
+     * @principle Public read access for global data, with admin-only write controls.
+     */
+    match /subjects/{subjectId} {
+      allow get, list: if true;
+      allow create: if isAdmin();
+      allow update, delete: if isAdmin() && isExistingDoc();
+    }
+
+    /**
+     * @description Allows any signed-in user to submit a DMCA takedown request.
+     *              Only admins can review, update, or delete these requests.
+     * @path /dmcaTakedowns/{dmcaTakedownId}
+     * @allow (create) Any signed-in user can create a new takedown request.
+     * @deny (list) A regular user tries to see all submitted takedown requests.
+     * @principle Public write endpoint for specific actions, with admin-only management.
+     */
+    match /dmcaTakedowns/{dmcaTakedownId} {
+      allow get, list: if isAdmin();
+      allow create: if isSignedIn();
+      allow update, delete: if isAdmin() && isExistingDoc();
+    }
+
+    /**
+     * @description Stores platform analytics. Restricted to admin access only.
+     * @path /analytics/{analyticId}
+     * @allow (get) An admin views the analytics data for a specific day.
+     * @deny (create) A regular user attempts to write fake analytics data.
+     * @principle Secures sensitive business intelligence data to authorized roles.
+     */
+    match /analytics/{analyticId} {
+      allow get, list: if isAdmin();
+      allow create: if isAdmin();
+      allow update, delete: if isAdmin() && isExistingDoc();
+    }
+    
+    /**
+     * @description Stores email templates. Restricted to admin access only.
+     * @path /templates/{templateId}
+     * @allow (list) An admin lists all available email templates.
+     * @deny (get) A regular user tries to read an email template.
+     * @principle Secures internal system assets to authorized roles.
+     */
+    match /templates/{templateId} {
+      allow get, list: if isAdmin();
+      allow create: if isAdmin();
+      allow update, delete: if isAdmin() && isExistingDoc();
+    }
+
+
+    // --------------------------------------------------------------------------------
+    // Server-Side & Log Collections (Client Write-Access Denied)
+    // --------------------------------------------------------------------------------
+
+    /**
+     * @description Logs of admin actions. Writable only by the backend, readable by admins.
+     * @path /auditLogs/{auditLogId}
+     * @allow (get) An admin reviews the audit log for a specific action.
+     * @deny (create) Any user (including an admin) tries to create a log entry from the client.
+     * @principle Data integrity; logs should be immutable from the client-side.
+     */
+    match /auditLogs/{auditLogId} {
+      allow get, list: if isAdmin();
+      allow create: if false;
+      allow update: if false;
+      allow delete: if false;
+    }
+
+    /**
+     * @description Logs of API access. Writable only by the backend, readable by admins.
+     * @path /accessLogs/{accessLogId}
+     * @allow (list) An admin lists recent API access events.
+     * @deny (create) Any client attempts to create an access log entry.
+     * @principle Data integrity; logs should be immutable from the client-side.
+     */
+    match /accessLogs/{accessLogId} {
+      allow get, list: if isAdmin();
+      allow create: if false;
+      allow update: if false;
+      allow delete: if false;
+    }
+    
+    /**
+     * @description Audit trail for user role changes. Writable only by the backend.
+     * @path /roleAudits/{roleAuditId}
+     * @allow (get) An admin views the history of a user's role changes.
+     * @deny (create) Any client attempts to create a role audit entry.
+     * @principle Data integrity; logs should be immutable from the client-side.
+     */
+    match /roleAudits/{roleAuditId} {
+      allow get, list: if isAdmin();
+      allow create: if false;
+      allow update: if false;
+      allow delete: if false;
+    }
+
+    /**
+     * @description Audit trail for price changes. Writable only by the backend.
+     * @path /priceChanges/{priceChangeId}
+     * @allow (list) An admin lists the history of price changes.
+     * @deny (create) Any client attempts to create a price change log entry.
+     * @principle Data integrity; logs should be immutable from the client-side.
+     */
+    match /priceChanges/{priceChangeId} {
+      allow get, list: if isAdmin();
+      allow create: if false;
+      allow update: if false;
+      allow delete: if false;
+    }
+
+    /**
+     * @description Stores incoming webhook events from payment providers. No client access.
+     * @path /webhooks/{webhookId}
+     * @allow (any) All client-side operations are denied.
+     * @deny (any) A client attempts to read or write a webhook payload.
+     * @principle Secures integration endpoints from all external client access.
+     */
+    match /webhooks/{webhookId} {
+      allow get: if false;
+      allow list: if false;
+      allow create: if false;
+      allow update: if false;
+      allow delete: if false;
+    }
+  }
+}

@@ -1,0 +1,1068 @@
+{
+  "entities": {
+    "User": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "User",
+      "type": "object",
+      "description": "Represents a user account in the EduVault Cameroon platform.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the user."
+        },
+        "fullName": {
+          "type": "string",
+          "description": "The user's full name."
+        },
+        "email": {
+          "type": "string",
+          "description": "The user's email address.",
+          "format": "email"
+        },
+        "phone": {
+          "type": "string",
+          "description": "The user's phone number (Cameroon format)."
+        },
+        "emailVerified": {
+          "type": "boolean",
+          "description": "Indicates whether the user's email address has been verified."
+        },
+        "isActive": {
+          "type": "boolean",
+          "description": "Indicates whether the user's account is active."
+        },
+        "role": {
+          "type": "string",
+          "description": "The user's role (student, admin, super_admin)."
+        },
+        "termsAccepted": {
+          "type": "boolean",
+          "description": "Indicates whether the user accepted the terms and conditions."
+        },
+        "locale": {
+          "type": "string",
+          "description": "The user's preferred locale/language."
+        }
+      },
+      "required": [
+        "id",
+        "fullName",
+        "email",
+        "phone",
+        "emailVerified",
+        "isActive",
+        "role",
+        "termsAccepted"
+      ]
+    },
+    "Document": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Document",
+      "type": "object",
+      "description": "Represents a past question paper document.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the document."
+        },
+        "title": {
+          "type": "string",
+          "description": "The title of the document."
+        },
+        "examType": {
+          "type": "string",
+          "description": "The type of exam (e.g., GCE, University of Buea)."
+        },
+        "subject": {
+          "type": "string",
+          "description": "The subject of the document."
+        },
+        "year": {
+          "type": "number",
+          "description": "The year the question paper was used."
+        },
+        "level": {
+          "type": "string",
+          "description": "The level of the exam (e.g., O Level, A Level)."
+        },
+        "tags": {
+          "type": "array",
+          "description": "Tags associated with the document.",
+          "items": {
+            "type": "string"
+          }
+        },
+        "visibility": {
+          "type": "string",
+          "description": "The visibility of the document (public, private)."
+        },
+        "storagePath": {
+          "type": "string",
+          "description": "The path to the document in cloud storage."
+        },
+        "fileSize": {
+          "type": "number",
+          "description": "The size of the document file in bytes."
+        },
+        "uploadedBy": {
+          "type": "string",
+          "description": "Reference to the User who uploaded the document. (Relationship: User 1:N Document)"
+        },
+        "downloadsCount": {
+          "type": "number",
+          "description": "The number of times the document has been downloaded."
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "The timestamp when the document was created.",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id",
+        "title",
+        "examType",
+        "subject",
+        "year",
+        "level",
+        "visibility",
+        "storagePath",
+        "fileSize",
+        "uploadedBy",
+        "downloadsCount",
+        "createdAt"
+      ]
+    },
+    "Payment": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Payment",
+      "type": "object",
+      "description": "Represents a payment made by a user.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the payment."
+        },
+        "userId": {
+          "type": "string",
+          "description": "Reference to the User who made the payment. (Relationship: User 1:N Payment)"
+        },
+        "amount": {
+          "type": "number",
+          "description": "The amount paid."
+        },
+        "currency": {
+          "type": "string",
+          "description": "The currency of the payment."
+        },
+        "provider": {
+          "type": "string",
+          "description": "The payment provider (e.g., MTN, Orange)."
+        },
+        "providerRef": {
+          "type": "string",
+          "description": "The payment provider's reference for the transaction."
+        },
+        "status": {
+          "type": "string",
+          "description": "The status of the payment (pending, confirmed, failed)."
+        },
+        "proofUrl": {
+          "type": "string",
+          "description": "URL to the payment proof screenshot."
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "The timestamp when the payment was initiated.",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "description": "The timestamp when the payment was last updated.",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id",
+        "userId",
+        "amount",
+        "currency",
+        "provider",
+        "providerRef",
+        "status",
+        "createdAt",
+        "updatedAt"
+      ]
+    },
+    "Download": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Download",
+      "type": "object",
+      "description": "Represents a document download event.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the download event."
+        },
+        "userId": {
+          "type": "string",
+          "description": "Reference to the User who downloaded the document. (Relationship: User 1:N Download)"
+        },
+        "documentId": {
+          "type": "string",
+          "description": "Reference to the Document that was downloaded. (Relationship: Document 1:N Download)"
+        },
+        "timestamp": {
+          "type": "string",
+          "description": "The timestamp of the download event.",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id",
+        "userId",
+        "documentId",
+        "timestamp"
+      ]
+    },
+    "RateLimit": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "RateLimit",
+      "type": "object",
+      "description": "Represents rate limiting information for a user.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the rate limit record."
+        },
+        "userId": {
+          "type": "string",
+          "description": "Reference to the User to whom the rate limit applies. (Relationship: User 1:N RateLimit)"
+        },
+        "endpoint": {
+          "type": "string",
+          "description": "The API endpoint being rate limited."
+        },
+        "requestsPerMinute": {
+          "type": "number",
+          "description": "The number of requests allowed per minute."
+        },
+        "downloadsPerDay": {
+          "type": "number",
+          "description": "The number of downloads allowed per day."
+        },
+        "lastRequestTime": {
+          "type": "string",
+          "description": "The timestamp of the last request made.",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id",
+        "userId",
+        "endpoint",
+        "requestsPerMinute",
+        "downloadsPerDay",
+        "lastRequestTime"
+      ]
+    },
+    "AuditLog": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "AuditLog",
+      "type": "object",
+      "description": "Represents an audit log entry for admin actions.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the audit log entry."
+        },
+        "actorId": {
+          "type": "string",
+          "description": "Reference to the User who performed the action (the admin). (Relationship: User 1:N AuditLog)"
+        },
+        "action": {
+          "type": "string",
+          "description": "The action performed (e.g., user activation, document deletion)."
+        },
+        "metadata": {
+          "type": "string",
+          "description": "Metadata associated with the action (e.g., user ID, document ID)."
+        },
+        "timestamp": {
+          "type": "string",
+          "description": "The timestamp of the action.",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id",
+        "actorId",
+        "action",
+        "metadata",
+        "timestamp"
+      ]
+    },
+    "Notification": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Notification",
+      "type": "object",
+      "description": "Represents a notification sent to a user.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the notification."
+        },
+        "userId": {
+          "type": "string",
+          "description": "Reference to the User who received the notification. (Relationship: User 1:N Notification)"
+        },
+        "type": {
+          "type": "string",
+          "description": "The type of notification (e.g., registration, payment received)."
+        },
+        "message": {
+          "type": "string",
+          "description": "The message of the notification."
+        },
+        "timestamp": {
+          "type": "string",
+          "description": "The timestamp when the notification was sent.",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id",
+        "userId",
+        "type",
+        "message",
+        "timestamp"
+      ]
+    },
+    "Announcement": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Announcement",
+      "type": "object",
+      "description": "Represents a site-wide announcement.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the announcement."
+        },
+        "title": {
+          "type": "string",
+          "description": "The title of the announcement."
+        },
+        "message": {
+          "type": "string",
+          "description": "The message of the announcement."
+        },
+        "startAt": {
+          "type": "string",
+          "description": "The timestamp when the announcement starts being displayed.",
+          "format": "date-time"
+        },
+        "endAt": {
+          "type": "string",
+          "description": "The timestamp when the announcement stops being displayed.",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id",
+        "title",
+        "message",
+        "startAt",
+        "endAt"
+      ]
+    },
+    "Analytic": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Analytic",
+      "type": "object",
+      "description": "Represents analytics data for the platform.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the analytics record."
+        },
+        "date": {
+          "type": "string",
+          "description": "The date for which the analytics data is recorded.",
+          "format": "date"
+        },
+        "registrations": {
+          "type": "number",
+          "description": "The number of registrations on that date."
+        },
+        "paymentInitiated": {
+          "type": "number",
+          "description": "The number of payment initiations on that date."
+        },
+        "paymentConfirmed": {
+          "type": "number",
+          "description": "The number of confirmed payments on that date."
+        },
+        "documentUploaded": {
+          "type": "number",
+          "description": "The number of documents uploaded on that date."
+        },
+        "documentDownloaded": {
+          "type": "number",
+          "description": "The number of documents downloaded on that date."
+        }
+      },
+      "required": [
+        "id",
+        "date",
+        "registrations",
+        "paymentInitiated",
+        "paymentConfirmed",
+        "documentUploaded",
+        "documentDownloaded"
+      ]
+    },
+    "Config": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Config",
+      "type": "object",
+      "description": "Represents global configuration settings for the platform.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the configuration record."
+        },
+        "activationFee": {
+          "type": "number",
+          "description": "The fee required to activate an account."
+        },
+        "currency": {
+          "type": "string",
+          "description": "The currency used for payments."
+        },
+        "paymentProviders": {
+          "type": "array",
+          "description": "The list of supported payment providers.",
+          "items": {
+            "type": "string"
+          }
+        },
+        "maintenanceMode": {
+          "type": "boolean",
+          "description": "Indicates whether the platform is in maintenance mode."
+        }
+      },
+      "required": [
+        "id",
+        "activationFee",
+        "currency",
+        "paymentProviders",
+        "maintenanceMode"
+      ]
+    },
+    "Template": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Template",
+      "type": "object",
+      "description": "Represents an email template.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the template."
+        },
+        "name": {
+          "type": "string",
+          "description": "The name of the template (e.g., registration, activation)."
+        },
+        "subject": {
+          "type": "string",
+          "description": "The subject of the email."
+        },
+        "body": {
+          "type": "string",
+          "description": "The HTML body of the email."
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "subject",
+        "body"
+      ]
+    },
+    "Webhook": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Webhook",
+      "type": "object",
+      "description": "Represents a webhook event received from a payment provider.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the webhook event."
+        },
+        "paymentId": {
+          "type": "string",
+          "description": "Reference to the Payment associated with the webhook. (Relationship: Payment 1:N Webhook)"
+        },
+        "providerRef": {
+          "type": "string",
+          "description": "The payment provider's reference for the transaction."
+        },
+        "payload": {
+          "type": "string",
+          "description": "The raw payload received from the payment provider."
+        },
+        "receivedAt": {
+          "type": "string",
+          "description": "The timestamp when the webhook was received.",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id",
+        "paymentId",
+        "providerRef",
+        "payload",
+        "receivedAt"
+      ]
+    },
+    "AccessLog": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "AccessLog",
+      "type": "object",
+      "description": "Represents an API access log entry.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the access log entry."
+        },
+        "userId": {
+          "type": "string",
+          "description": "Reference to the User who accessed the API. (Relationship: User 1:N AccessLog) Nullable for anonymous access."
+        },
+        "endpoint": {
+          "type": "string",
+          "description": "The API endpoint accessed."
+        },
+        "ip": {
+          "type": "string",
+          "description": "The IP address of the client."
+        },
+        "timestamp": {
+          "type": "string",
+          "description": "The timestamp when the API was accessed.",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id",
+        "endpoint",
+        "ip",
+        "timestamp"
+      ]
+    },
+    "ExamType": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "ExamType",
+      "type": "object",
+      "description": "Represents a type of exam (e.g., GCE, University of Buea).",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the exam type."
+        },
+        "name": {
+          "type": "string",
+          "description": "The name of the exam type."
+        },
+        "slug": {
+          "type": "string",
+          "description": "A URL-friendly slug for the exam type."
+        },
+        "description": {
+          "type": "string",
+          "description": "A description of the exam type."
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "slug",
+        "description"
+      ]
+    },
+    "Subject": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Subject",
+      "type": "object",
+      "description": "Represents a subject (e.g., Mathematics, English).",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the subject."
+        },
+        "name": {
+          "type": "string",
+          "description": "The name of the subject."
+        },
+        "code": {
+          "type": "string",
+          "description": "A short code for the subject."
+        },
+        "aliases": {
+          "type": "array",
+          "description": "Alternative names or synonyms for the subject.",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "code"
+      ]
+    },
+    "DMCA Takedown": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "DMCA Takedown",
+      "type": "object",
+      "description": "Represents a DMCA takedown request for a document.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the DMCA takedown request."
+        },
+        "documentId": {
+          "type": "string",
+          "description": "Reference to the Document that is the subject of the takedown request. (Relationship: Document 1:N DMCA Takedown)"
+        },
+        "requesterContact": {
+          "type": "string",
+          "description": "Contact information for the person submitting the takedown request."
+        },
+        "reason": {
+          "type": "string",
+          "description": "The reason for the takedown request."
+        },
+        "status": {
+          "type": "string",
+          "description": "The status of the takedown request (under_review, removed)."
+        }
+      },
+      "required": [
+        "id",
+        "documentId",
+        "requesterContact",
+        "reason",
+        "status"
+      ]
+    },
+    "RoleAudit": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "RoleAudit",
+      "type": "object",
+      "description": "Represents an audit log entry for role changes.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the role audit entry."
+        },
+        "adminId": {
+          "type": "string",
+          "description": "Reference to the Admin User who made the role change. (Relationship: User 1:N RoleAudit)"
+        },
+        "targetUserId": {
+          "type": "string",
+          "description": "Reference to the User whose role was changed. (Relationship: User 1:N RoleAudit)"
+        },
+        "oldRole": {
+          "type": "string",
+          "description": "The user's previous role."
+        },
+        "newRole": {
+          "type": "string",
+          "description": "The user's new role."
+        },
+        "timestamp": {
+          "type": "string",
+          "description": "The timestamp when the role was changed.",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id",
+        "adminId",
+        "targetUserId",
+        "oldRole",
+        "newRole",
+        "timestamp"
+      ]
+    },
+    "PriceChange": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "PriceChange",
+      "type": "object",
+      "description": "Represents a change in the activation fee price.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the price change entry."
+        },
+        "adminId": {
+          "type": "string",
+          "description": "Reference to the Admin User who changed the price. (Relationship: User 1:N PriceChange)"
+        },
+        "effectiveDate": {
+          "type": "string",
+          "description": "The date when the price change became effective.",
+          "format": "date-time"
+        },
+        "newPrice": {
+          "type": "number",
+          "description": "The new activation fee price."
+        }
+      },
+      "required": [
+        "id",
+        "adminId",
+        "effectiveDate",
+        "newPrice"
+      ]
+    }
+  },
+  "auth": {
+    "providers": [
+      "password",
+      "anonymous"
+    ]
+  },
+  "firestore": {
+    "structure": [
+      {
+        "path": "/users/{userId}",
+        "definition": {
+          "entityName": "user",
+          "schema": {
+            "$ref": "#/backend/entities/User"
+          },
+          "description": "Stores user account information. 'role' field determines user privileges.",
+          "params": [
+            {
+              "name": "userId",
+              "description": "The unique identifier for the user."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/users/{userId}/documents/{documentId}",
+        "definition": {
+          "entityName": "document",
+          "schema": {
+            "$ref": "#/backend/entities/Document"
+          },
+          "description": "Stores metadata for documents uploaded by a specific user. The 'uploadedBy' field should match the userId parameter. Includes denormalized 'userId' from the parent user document for authorization independence.",
+          "params": [
+            {
+              "name": "userId",
+              "description": "The unique identifier for the user who uploaded the document."
+            },
+            {
+              "name": "documentId",
+              "description": "The unique identifier for the document."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/users/{userId}/payments/{paymentId}",
+        "definition": {
+          "entityName": "payment",
+          "schema": {
+            "$ref": "#/backend/entities/Payment"
+          },
+          "description": "Stores payment information for a user. The 'userId' field should match the userId parameter.",
+          "params": [
+            {
+              "name": "userId",
+              "description": "The unique identifier for the user who made the payment."
+            },
+            {
+              "name": "paymentId",
+              "description": "The unique identifier for the payment."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/users/{userId}/downloads/{downloadId}",
+        "definition": {
+          "entityName": "download",
+          "schema": {
+            "$ref": "#/backend/entities/Download"
+          },
+          "description": "Stores download records for a user.  The 'userId' field should match the userId parameter.",
+          "params": [
+            {
+              "name": "userId",
+              "description": "The unique identifier for the user who downloaded the document."
+            },
+            {
+              "name": "downloadId",
+              "description": "The unique identifier for the download event."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/users/{userId}/rateLimits/{rateLimitId}",
+        "definition": {
+          "entityName": "rateLimit",
+          "schema": {
+            "$ref": "#/backend/entities/RateLimit"
+          },
+          "description": "Stores rate limiting information for a user. The 'userId' field should match the userId parameter.",
+          "params": [
+            {
+              "name": "userId",
+              "description": "The unique identifier for the user to whom the rate limit applies."
+            },
+            {
+              "name": "rateLimitId",
+              "description": "The unique identifier for the rate limit record."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/users/{userId}/notifications/{notificationId}",
+        "definition": {
+          "entityName": "notification",
+          "schema": {
+            "$ref": "#/backend/entities/Notification"
+          },
+          "description": "Stores notifications for a user.  The 'userId' field should match the userId parameter.",
+          "params": [
+            {
+              "name": "userId",
+              "description": "The unique identifier for the user who received the notification."
+            },
+            {
+              "name": "notificationId",
+              "description": "The unique identifier for the notification."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/accessLogs/{accessLogId}",
+        "definition": {
+          "entityName": "accessLog",
+          "schema": {
+            "$ref": "#/backend/entities/AccessLog"
+          },
+          "description": "Stores API access logs. The 'userId' field may be null for anonymous access.",
+          "params": [
+            {
+              "name": "accessLogId",
+              "description": "The unique identifier for the access log entry."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/roles_admin/{userId}",
+        "definition": {
+          "entityName": "user",
+          "schema": {
+            "$ref": "#/backend/entities/User"
+          },
+          "description": "Collection to store UIDs of admin users. Existence of a document with a UID as ID grants admin privileges.  (Existence over Content)",
+          "params": [
+            {
+              "name": "userId",
+              "description": "The unique identifier for the admin user."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/auditLogs/{auditLogId}",
+        "definition": {
+          "entityName": "auditLog",
+          "schema": {
+            "$ref": "#/backend/entities/AuditLog"
+          },
+          "description": "Stores audit logs for admin actions.",
+          "params": [
+            {
+              "name": "auditLogId",
+              "description": "The unique identifier for the audit log entry."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/announcements/{announcementId}",
+        "definition": {
+          "entityName": "announcement",
+          "schema": {
+            "$ref": "#/backend/entities/Announcement"
+          },
+          "description": "Stores site-wide announcements.",
+          "params": [
+            {
+              "name": "announcementId",
+              "description": "The unique identifier for the announcement."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/analytics/{analyticId}",
+        "definition": {
+          "entityName": "analytic",
+          "schema": {
+            "$ref": "#/backend/entities/Analytic"
+          },
+          "description": "Stores analytics data for the platform.",
+          "params": [
+            {
+              "name": "analyticId",
+              "description": "The unique identifier for the analytics record."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/config/{configId}",
+        "definition": {
+          "entityName": "config",
+          "schema": {
+            "$ref": "#/backend/entities/Config"
+          },
+          "description": "Stores global configuration settings for the platform.",
+          "params": [
+            {
+              "name": "configId",
+              "description": "The unique identifier for the configuration record."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/templates/{templateId}",
+        "definition": {
+          "entityName": "template",
+          "schema": {
+            "$ref": "#/backend/entities/Template"
+          },
+          "description": "Stores email templates.",
+          "params": [
+            {
+              "name": "templateId",
+              "description": "The unique identifier for the template."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/webhooks/{webhookId}",
+        "definition": {
+          "entityName": "webhook",
+          "schema": {
+            "$ref": "#/backend/entities/Webhook"
+          },
+          "description": "Stores webhook events received from payment providers.",
+          "params": [
+            {
+              "name": "webhookId",
+              "description": "The unique identifier for the webhook event."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/examTypes/{examTypeId}",
+        "definition": {
+          "entityName": "examType",
+          "schema": {
+            "$ref": "#/backend/entities/ExamType"
+          },
+          "description": "Stores exam types.",
+          "params": [
+            {
+              "name": "examTypeId",
+              "description": "The unique identifier for the exam type."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/subjects/{subjectId}",
+        "definition": {
+          "entityName": "subject",
+          "schema": {
+            "$ref": "#/backend/entities/Subject"
+          },
+          "description": "Stores subjects.",
+          "params": [
+            {
+              "name": "subjectId",
+              "description": "The unique identifier for the subject."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/dmcaTakedowns/{dmcaTakedownId}",
+        "definition": {
+          "entityName": "DMCA Takedown",
+          "schema": {
+            "$ref": "#/backend/entities/DMCA Takedown"
+          },
+          "description": "Stores DMCA takedown requests.",
+          "params": [
+            {
+              "name": "dmcaTakedownId",
+              "description": "The unique identifier for the DMCA takedown request."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/roleAudits/{roleAuditId}",
+        "definition": {
+          "entityName": "RoleAudit",
+          "schema": {
+            "$ref": "#/backend/entities/RoleAudit"
+          },
+          "description": "Stores role audit logs.",
+          "params": [
+            {
+              "name": "roleAuditId",
+              "description": "The unique identifier for the role audit entry."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/priceChanges/{priceChangeId}",
+        "definition": {
+          "entityName": "PriceChange",
+          "schema": {
+            "$ref": "#/backend/entities/PriceChange"
+          },
+          "description": "Stores price change history.",
+          "params": [
+            {
+              "name": "priceChangeId",
+              "description": "The unique identifier for the price change entry."
+            }
+          ]
+        }
+      }
+    ],
+    "reasoning": "The Firestore data structure is designed to prioritize authorization independence, clarity, and scalability. It adheres to the principles of DBAC (Database-Based Access Control) using `request.auth.uid` and avoids complex hierarchical authorization dependencies. The structure facilitates secure list operations through structural segregation and membership maps where necessary.\n\n**Authorization Independence (CRITICAL):**\n*   User roles are stored directly in the `users` document (`/users/{userId}`).\n*   Access to user-owned data (documents, payments, downloads, rate limits, notifications, access logs) is controlled via hierarchical paths, eliminating the need for `get()` calls in security rules. For instance, documents uploaded by a user are stored under `/users/{userId}/documents/{documentId}`.\n\n**Structural Segregation (Homogeneous Security Posture):**\n*   The `users` collection stores user data.\n*   Documents are organized under the respective user, ensuring consistent ownership. Public documents could be put in a `/documents` collection with a `visibility` field, ensuring only active users can view them. A suggested alternative is to create a separate collection `/public_documents` and `/private_documents`. Segregating them makes it clear to the user what they have access to.\n*   Admin-related data (audit logs, role audits, price changes) are stored separately and can be secured using specific roles.\n*   Global configuration settings and email templates are stored in dedicated collections with appropriate security restrictions.\n\n**Access Modeling (Standardization and Consistency):**\n*   User-owned data follows the `/users/{userId}/...` pattern.\n*   Admin roles are managed via the `/roles_admin/{uid}` collection. A user's UID existing as a document ID in this collection grants admin privileges. This approach relies on **Existence over Content**, as recommended.\n\n**QAPs (Rules are not Filters):**\n*   Secure `list` operations are supported by the structure.  For example, listing a user's documents is done via a collection group query on `/users/{userId}/documents`. The security rules can easily verify `request.auth.uid == userId`.\n\n**Invariants:**\n*   Timestamps (createdAt, updatedAt) can be enforced in rules.\n*   The structure supports the integrity of ownership (e.g., a document's `uploadedBy` field matches the user ID in the path).\n\nThis design ensures straightforward security rules, avoids complex queries, and enables atomic operations, leading to a robust and maintainable application."
+  }
+}
