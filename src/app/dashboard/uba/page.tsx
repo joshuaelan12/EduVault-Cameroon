@@ -16,14 +16,13 @@ const ubaData = [
     school: 'College of Technology (COLTECH)',
     icon: <Cog className="w-5 h-5 text-primary" />,
     departments: [
-      {
-        name: 'Computer Engineering',
-        documents: [],
-      },
-      {
-        name: 'Agribusiness Technology',
-        documents: [],
-      },
+        { name: 'Electrical and Electronic Engineering', documents: [] },
+        { name: 'Mechanical Engineering', documents: [] },
+        { name: 'Civil Engineering', documents: [] },
+        { name: 'Computer Engineering', documents: [] },
+        { name: 'Renewable Energy Engineering', documents: [] },
+        { name: 'Mechatronics Engineering', documents: [] },
+        { name: 'Industrial Maintenance Engineering', documents: [] },
     ],
   },
   {
