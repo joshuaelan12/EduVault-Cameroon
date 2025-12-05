@@ -3,9 +3,10 @@
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
-import { Menu, GraduationCap, LogOut, User as UserIcon } from 'lucide-react';
+import { Menu, GraduationCap, LogOut, User as UserIcon, Shield } from 'lucide-react';
 import { useState } from 'react';
 import { useUser } from '@/firebase';
+import { useAdmin } from '@/hooks/use-admin';
 import { getAuth, signOut } from 'firebase/auth';
 
 const navLinks = [
@@ -17,6 +18,7 @@ const navLinks = [
 export default function Header() {
   const [isSheetOpen, setIsSheetOpen] = useState(false);
   const { user, isUserLoading } = useUser();
+  const { isAdmin } = useAdmin();
   const auth = getAuth();
 
   const handleLogout = () => {
@@ -40,6 +42,15 @@ export default function Header() {
               {link.label}
             </Link>
           ))}
+          {isAdmin && (
+            <Link
+              href="/admin"
+              className="transition-colors hover:text-foreground/80 text-foreground font-semibold"
+            >
+              <Shield className="mr-2 h-4 w-4 inline-block" />
+              Admin
+            </Link>
+          )}
         </nav>
         <div className="flex flex-1 items-center justify-end space-x-4">
           <div className="hidden md:flex items-center space-x-2">
@@ -90,6 +101,16 @@ export default function Header() {
                       {link.label}
                     </Link>
                   ))}
+                   {isAdmin && (
+                    <Link
+                      href="/admin"
+                      className="text-lg font-medium text-foreground"
+                      onClick={() => setIsSheetOpen(false)}
+                    >
+                      <Shield className="mr-2 h-4 w-4 inline-block" />
+                      Admin
+                    </Link>
+                  )}
                 </div>
                 <div className="mt-auto flex flex-col space-y-2">
                   {!isUserLoading && user ? (

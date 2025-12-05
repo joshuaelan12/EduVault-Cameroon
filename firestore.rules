@@ -16,7 +16,7 @@
  * - User Data Privacy: All collections under `/users/{userId}` are strictly limited
  *   to the owner of that data tree, with admins having oversight capabilities.
  * - No User Enumeration: Listing documents in the top-level `/users` collection
- *   is explicitly forbidden to prevent attackers from discovering user IDs.
+ *   is forbidden to prevent attackers from discovering user IDs, though admins can list them.
  * - Segregated Data: Publicly readable data (e.g., `/announcements`) is kept in
  *   separate collections from private user data, which simplifies list queries and
  *   secures private information by default.
@@ -94,7 +94,7 @@ service cloud.firestore {
 
     /**
      * @description Manages user profile documents. Users can create and manage their
-     *              own profile. Admins have full oversight. Listing users is disabled.
+     *              own profile. Admins have full oversight.
      * @path /users/{userId}
      * @allow (create) A new user `auth.uid: 'user_123'` creates their own document at `/users/user_123`.
      * @deny (get) User `user_abc` tries to read the profile of `user_xyz`.
@@ -102,7 +102,7 @@ service cloud.firestore {
      */
     match /users/{userId} {
       allow get: if isOwner(userId) || isAdmin();
-      allow list: if false;
+      allow list: if isAdmin();
       allow create: if isOwner(userId) && incomingDataMatchesPathId(userId, 'id');
       allow update: if (isOwner(userId) || isAdmin()) && isExistingDoc() && internalIdIsImmutable('id');
       allow delete: if (isOwner(userId) || isAdmin()) && isExistingDoc();
@@ -185,9 +185,10 @@ service cloud.firestore {
 
     /**
      * @description Stores admin user roles. Existence of a doc grants admin rights.
+     *              A user can check their own admin status.
      * @path /roles_admin/{userId}
-     * @allow (create) An admin grants admin rights to user `user_xyz`.
-     * @deny (delete) A non-admin user tries to remove an admin's role.
+     * @allow (get) A user `user_xyz` checks if they are an admin by reading `/roles_admin/user_xyz`.
+     * @deny (get) User `user_abc` tries to read `/roles_admin/user_xyz`.
      * @principle Role-Based Access Control (RBAC) for managing site administrators.
      */
     match /roles_admin/{userId} {
