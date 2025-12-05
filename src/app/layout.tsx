@@ -22,6 +22,7 @@ export default function RootLayout({
 }>) {
   const pathname = usePathname();
   const isAdminRoute = pathname.startsWith('/admin');
+  const isDashboardRoute = pathname.startsWith('/dashboard');
 
   return (
     <html lang="en" className="!scroll-smooth">
@@ -35,11 +36,11 @@ export default function RootLayout({
       <body className="font-body antialiased bg-background text-foreground">
         <FirebaseClientProvider>
           <div className="flex flex-col min-h-screen">
-            {!isAdminRoute && <Header />}
+            {!isAdminRoute && !isDashboardRoute && <Header />}
             <main className="flex-grow">
               {children}
             </main>
-            {!isAdminRoute && <Footer />}
+            {!isAdminRoute && !isDashboardRoute && <Footer />}
           </div>
           <Toaster />
         </FirebaseClientProvider>

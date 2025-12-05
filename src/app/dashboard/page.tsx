@@ -87,11 +87,19 @@ function ActivationPage() {
 }
 
 function UserDashboard({ user }: { user: UserData }) {
+     const auth = useAuth();
+    const router = useRouter();
+
+    const handleLogout = () => {
+        signOut(auth);
+        router.push('/login');
+    };
+
     return (
-        <div className="container mx-auto py-8 px-4">
+        <div className="space-y-6">
             <div className="mb-8">
                 <h1 className="text-3xl font-bold tracking-tight">Welcome, {user.fullName}!</h1>
-                <p className="text-muted-foreground">This is your dashboard. More features coming soon!</p>
+                <p className="text-muted-foreground">This is your dashboard. You can start searching for past questions now.</p>
             </div>
             <Card>
                 <CardHeader>
@@ -99,7 +107,14 @@ function UserDashboard({ user }: { user: UserData }) {
                 </CardHeader>
                 <CardContent>
                     <p>Status: <span className="font-semibold text-green-600">Active</span></p>
+                    <p className="text-muted-foreground text-sm">You have full access to all resources.</p>
                 </CardContent>
+                 <CardFooter>
+                    <Button variant="outline" onClick={handleLogout}>
+                        <LogOut className="mr-2 h-4 w-4" />
+                        Logout
+                    </Button>
+                </CardFooter>
             </Card>
         </div>
     )
@@ -128,7 +143,7 @@ export default function DashboardPage() {
   // Loading state
   if (isUserLoading || isDocLoading) {
     return (
-        <div className="flex h-[calc(100vh-10rem)] w-full items-center justify-center bg-background">
+        <div className="flex h-[calc(100vh-10rem)] w-full items-center justify-center bg-transparent">
             <div className="space-y-4 w-full max-w-lg p-4">
                 <Skeleton className="h-12 w-1/2" />
                 <Skeleton className="h-4 w-3/4" />
@@ -152,11 +167,7 @@ export default function DashboardPage() {
     return userData.isActive ? <UserDashboard user={userData} /> : <ActivationPage />;
   }
   
-  // Fallback if there's a user but no doc (shouldn't happen for students)
-  return (
-    <div className="container mx-auto py-12 px-4 text-center">
-        <p className="text-muted-foreground">Could not load user data. Please try again later.</p>
-        <Button onClick={() => router.push('/')} variant="link">Go to Homepage</Button>
-    </div>
-  );
+  // Fallback if there's a user but no doc (this covers the admin case)
+  // Admins will be redirected away by the admin layout anyway.
+  return null;
 }
