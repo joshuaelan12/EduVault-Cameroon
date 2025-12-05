@@ -16,16 +16,16 @@ export default function AdminPage() {
   const { data: adminData, isLoading: isAdminDataLoading } = useDoc(adminDocRef);
 
   useEffect(() => {
-    const isLoading = isUserLoading || isAdminDataLoading;
-    if (isLoading) {
-      return; // Do nothing while loading
+    // Wait until both user and admin status checks are fully complete
+    if (isUserLoading || isAdminDataLoading) {
+      return; // Do nothing while any data is loading
     }
     
-    // If not loading and there's no authenticated user, redirect to login
+    // After loading, if there's no user, redirect to login
     if (!user) {
       router.push('/login');
     } 
-    // If user is logged in but their document does not exist in roles_admin, redirect to home
+    // If there is a user but they are not found in the admin collection, redirect home
     else if (!adminData) {
       router.push('/');
     }
