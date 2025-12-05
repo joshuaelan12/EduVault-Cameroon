@@ -1,3 +1,4 @@
+
 'use client';
 
 import {
@@ -145,8 +146,12 @@ const ubaData = [
     school: 'Higher Institute of Commerce and Management (HICM)',
     icon: <Building className="w-5 h-5 text-primary" />,
     departments: [
-        { name: 'Marketing', documents: [] },
+        { name: 'Accounting', documents: [] },
         { name: 'Banking and Finance', documents: [] },
+        { name: 'Marketing', documents: [] },
+        { name: 'Management', documents: [] },
+        { name: 'International Trade', documents: [] },
+        { name: 'Entrepreneurship', documents: [] },
     ],
   },
   {
