@@ -30,7 +30,7 @@ const aLevelSubjects = [
   'Chemistry', 'Pure Mathematics with Mechanics', 'Pure Mathematics with Statistics', 
   'Physics', 'Biology', 'History', 'Geography', 'Economics', 'Computer Science', 'Literature in English'
 ];
-const availableYears = ['2024', '2023', '2022', '2021', '2020', '2019', '2018', '2015', '2013', '2012', '2010', '2009', '2007'];
+const availableYears = ['2024', '2023', '2022', '2021', '2020', '2019', '2018', '2016', '2015', '2013', '2012', '2010', '2009', '2007'];
 
 type Document = {
   id: string;
@@ -177,6 +177,87 @@ const documents: Document[] = [
     subject: 'Chemistry',
     year: '2007',
     filePath: '/documents/gce/A-Level/Chemistry/2007/paper3.pdf',
+    examType: 'GCE',
+  },
+  {
+    id: 'gce-alevel-pmm-2020-p1',
+    title: 'A-Level Pure Maths With Mechanics Paper 1 2020',
+    level: 'A-Level',
+    subject: 'Pure Mathematics with Mechanics',
+    year: '2020',
+    filePath: '/documents/gce/A-Level/Pure Mathematics with Mechanics/2020/paper1.pdf',
+    examType: 'GCE',
+  },
+  {
+    id: 'gce-alevel-pmm-2024-p1',
+    title: 'A-Level Pure Maths With Mechanics Paper 1 2024',
+    level: 'A-Level',
+    subject: 'Pure Mathematics with Mechanics',
+    year: '2024',
+    filePath: '/documents/gce/A-Level/Pure Mathematics with Mechanics/2024/paper1.pdf',
+    examType: 'GCE',
+  },
+  {
+    id: 'gce-alevel-pmm-2016-p2',
+    title: 'A-Level Pure Maths With Mechanics Paper 2 2016',
+    level: 'A-Level',
+    subject: 'Pure Mathematics with Mechanics',
+    year: '2016',
+    filePath: '/documents/gce/A-Level/Pure Mathematics with Mechanics/2016/paper2.pdf',
+    examType: 'GCE',
+  },
+  {
+    id: 'gce-alevel-pmm-2019-p2',
+    title: 'A-Level Pure Maths With Mechanics Paper 2 2019',
+    level: 'A-Level',
+    subject: 'Pure Mathematics with Mechanics',
+    year: '2019',
+    filePath: '/documents/gce/A-Level/Pure Mathematics with Mechanics/2019/paper2.pdf',
+    examType: 'GCE',
+  },
+  {
+    id: 'gce-alevel-pmm-2024-p2',
+    title: 'A-Level Pure Maths With Mechanics Paper 2 2024',
+    level: 'A-Level',
+    subject: 'Pure Mathematics with Mechanics',
+    year: '2024',
+    filePath: '/documents/gce/A-Level/Pure Mathematics with Mechanics/2024/paper2.pdf',
+    examType: 'GCE',
+  },
+  {
+    id: 'gce-alevel-pmm-2016-p3',
+    title: 'A-Level Pure Maths With Mechanics Paper 3 2016',
+    level: 'A-Level',
+    subject: 'Pure Mathematics with Mechanics',
+    year: '2016',
+    filePath: '/documents/gce/A-Level/Pure Mathematics with Mechanics/2016/paper3.pdf',
+    examType: 'GCE',
+  },
+  {
+    id: 'gce-alevel-pmm-2019-p3',
+    title: 'A-Level Pure Maths With Mechanics Paper 3 2019',
+    level: 'A-Level',
+    subject: 'Pure Mathematics with Mechanics',
+    year: '2019',
+    filePath: '/documents/gce/A-Level/Pure Mathematics with Mechanics/2019/paper3.pdf',
+    examType: 'GCE',
+  },
+  {
+    id: 'gce-alevel-pmm-2020-p3',
+    title: 'A-Level Pure Maths With Mechanics Paper 3 2020',
+    level: 'A-Level',
+    subject: 'Pure Mathematics with Mechanics',
+    year: '2020',
+    filePath: '/documents/gce/A-Level/Pure Mathematics with Mechanics/2020/paper3.pdf',
+    examType: 'GCE',
+  },
+  {
+    id: 'gce-alevel-pmm-2024-p3',
+    title: 'A-Level Pure Maths With Mechanics Paper 3 2024',
+    level: 'A-Level',
+    subject: 'Pure Mathematics with Mechanics',
+    year: '2024',
+    filePath: '/documents/gce/A-Level/Pure Mathematics with Mechanics/2024/paper3.pdf',
     examType: 'GCE',
   },
 ];
