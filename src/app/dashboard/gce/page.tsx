@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState } from 'react';
@@ -29,7 +30,7 @@ const aLevelSubjects = [
   'Chemistry', 'Pure Mathematics with Mechanics', 'Pure Mathematics with Statistics', 
   'Physics', 'Biology', 'History', 'Geography', 'Economics', 'Computer Science', 'Literature in English'
 ];
-const availableYears = ['2024', '2023', '2022', '2021', '2020', '2019', '2018', '2015', '2013'];
+const availableYears = ['2024', '2023', '2022', '2021', '2020', '2019', '2018', '2015', '2013', '2012', '2010', '2009'];
 
 type Document = {
   id: string;
@@ -95,6 +96,78 @@ const documents: Document[] = [
     subject: 'Chemistry',
     year: '2013',
     filePath: '/documents/gce/A-Level/Chemistry/2013/paper1.pdf',
+    examType: 'GCE',
+  },
+  {
+    id: 'gce-alevel-chem-2024-p2',
+    title: 'A-Level Chemistry Paper 2 2024',
+    level: 'A-Level',
+    subject: 'Chemistry',
+    year: '2024',
+    filePath: '/documents/gce/A-Level/Chemistry/2024/paper2.pdf',
+    examType: 'GCE',
+  },
+  {
+    id: 'gce-alevel-chem-2020-p2',
+    title: 'A-Level Chemistry Paper 2 2020',
+    level: 'A-Level',
+    subject: 'Chemistry',
+    year: '2020',
+    filePath: '/documents/gce/A-Level/Chemistry/2020/paper2.pdf',
+    examType: 'GCE',
+  },
+  {
+    id: 'gce-alevel-chem-2019-p2',
+    title: 'A-Level Chemistry Paper 2 2019',
+    level: 'A-Level',
+    subject: 'Chemistry',
+    year: '2019',
+    filePath: '/documents/gce/A-Level/Chemistry/2019/paper2.pdf',
+    examType: 'GCE',
+  },
+  {
+    id: 'gce-alevel-chem-2018-p2',
+    title: 'A-Level Chemistry Paper 2 2018',
+    level: 'A-Level',
+    subject: 'Chemistry',
+    year: '2018',
+    filePath: '/documents/gce/A-Level/Chemistry/2018/paper2.pdf',
+    examType: 'GCE',
+  },
+  {
+    id: 'gce-alevel-chem-2013-p2',
+    title: 'A-Level Chemistry Paper 2 2013',
+    level: 'A-Level',
+    subject: 'Chemistry',
+    year: '2013',
+    filePath: '/documents/gce/A-Level/Chemistry/2013/paper2.pdf',
+    examType: 'GCE',
+  },
+  {
+    id: 'gce-alevel-chem-2012-p2',
+    title: 'A-Level Chemistry Paper 2 2012',
+    level: 'A-Level',
+    subject: 'Chemistry',
+    year: '2012',
+    filePath: '/documents/gce/A-Level/Chemistry/2012/paper2.pdf',
+    examType: 'GCE',
+  },
+  {
+    id: 'gce-alevel-chem-2010-p2',
+    title: 'A-Level Chemistry Paper 2 2010',
+    level: 'A-Level',
+    subject: 'Chemistry',
+    year: '2010',
+    filePath: '/documents/gce/A-Level/Chemistry/2010/paper2.pdf',
+    examType: 'GCE',
+  },
+  {
+    id: 'gce-alevel-chem-2009-p2',
+    title: 'A-Level Chemistry Paper 2 2009',
+    level: 'A-Level',
+    subject: 'Chemistry',
+    year: '2009',
+    filePath: '/documents/gce/A-Level/Chemistry/2009/paper2.pdf',
     examType: 'GCE',
   },
 ];
