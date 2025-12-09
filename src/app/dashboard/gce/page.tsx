@@ -18,10 +18,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { Download, Book, Calendar, Layers, Loader2 } from 'lucide-react';
 import { Separator } from '@/components/ui/separator';
-import { getStorage, ref, getDownloadURL } from "firebase/storage";
 import { useToast } from '@/hooks/use-toast';
-import { useFirebaseApp, useCollection, useFirestore, useMemoFirebase } from '@/firebase';
-import { collection, query, where } from 'firebase/firestore';
 import { Skeleton } from '@/components/ui/skeleton';
 
 const oLevelSubjects = [
@@ -29,20 +26,34 @@ const oLevelSubjects = [
   'History', 'Geography', 'Economics', 'Computer Science', 'French'
 ];
 const aLevelSubjects = [
-  'Pure Mathematics with Mechanics', 'Pure Mathematics with Statistics', 
-  'Physics', 'Chemistry', 'Biology', 'History', 'Geography', 'Economics', 'Computer Science', 'Literature in English'
+  'Chemistry', 'Pure Mathematics with Mechanics', 'Pure Mathematics with Statistics', 
+  'Physics', 'Biology', 'History', 'Geography', 'Economics', 'Computer Science', 'Literature in English'
 ];
-const availableYears = ['2023', '2022', '2021', '2020', '2019', '2018'];
+const availableYears = ['2024', '2023', '2022', '2021', '2020', '2019', '2018'];
 
 type Document = {
   id: string;
   title: string;
-  level: string;
+  level: 'O-Level' | 'A-Level';
   subject: string;
   year: string;
-  storagePath: string;
-  examType: string;
+  filePath: string;
+  examType: 'GCE';
 };
+
+// Hardcoded documents list
+const documents: Document[] = [
+  {
+    id: 'gce-alevel-chem-2024-p1',
+    title: 'A-Level Chemistry Paper 1 2024',
+    level: 'A-Level',
+    subject: 'Chemistry',
+    year: '2024',
+    filePath: '/documents/gce/A-Level/Chemistry/2024/paper1.pdf',
+    examType: 'GCE',
+  },
+  // Add more documents here as needed
+];
 
 export default function GcePage() {
   const [selectedLevel, setSelectedLevel] = useState<string | null>(null);
@@ -50,22 +61,9 @@ export default function GcePage() {
   const [selectedYear, setSelectedYear] = useState<string | null>(null);
   const [downloadingDocId, setDownloadingDocId] = useState<string | null>(null);
 
-  const app = useFirebaseApp();
-  const firestore = useFirestore();
-  const storage = getStorage(app);
   const { toast } = useToast();
-
-  const documentsQuery = useMemoFirebase(() => {
-    // Base query for GCE documents
-    const baseQuery = query(collection(firestore, 'documents'), where('examType', '==', 'GCE'));
-    
-    // This part is for client-side filtering below, 
-    // as complex Firestore queries can be inefficient and costly.
-    // We fetch all GCE docs and filter in the browser.
-    return baseQuery;
-  }, [firestore]);
-
-  const { data: documents, isLoading: documentsLoading } = useCollection<Document>(documentsQuery);
+  // We can use a loading state for initial render simulation
+  const [documentsLoading, setDocumentsLoading] = useState(false);
 
   const subjects = selectedLevel === 'O-Level' ? oLevelSubjects : aLevelSubjects;
 
@@ -83,20 +81,18 @@ export default function GcePage() {
   const handleDownload = async (doc: Document) => {
     setDownloadingDocId(doc.id);
     try {
-      const fileRef = ref(storage, doc.storagePath);
-      const url = await getDownloadURL(fileRef);
-
-      window.open(url, '_blank');
-
+      // Direct link to the public file
+      window.open(doc.filePath, '_blank');
     } catch (error: any) {
       console.error("Download error:", error);
       toast({
         variant: "destructive",
         title: "Download Failed",
-        description: "You may not have permission to download this file, or the file does not exist.",
+        description: "The file may not exist at the specified path.",
       });
     } finally {
-      setDownloadingDocId(null);
+      // Add a small delay to simulate a download process
+      setTimeout(() => setDownloadingDocId(null), 1000);
     }
   };
 
@@ -220,5 +216,3 @@ export default function GcePage() {
     </div>
   );
 }
-
-    
