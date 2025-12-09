@@ -30,7 +30,7 @@ const aLevelSubjects = [
   'Chemistry', 'Pure Mathematics with Mechanics', 'Pure Mathematics with Statistics', 
   'Physics', 'Biology', 'History', 'Geography', 'Economics', 'Computer Science', 'Literature in English'
 ];
-const availableYears = ['2024', '2023', '2022', '2021', '2020', '2019', '2018', '2015', '2013', '2012', '2010', '2009'];
+const availableYears = ['2024', '2023', '2022', '2021', '2020', '2019', '2018', '2015', '2013', '2012', '2010', '2009', '2007'];
 
 type Document = {
   id: string;
@@ -168,6 +168,15 @@ const documents: Document[] = [
     subject: 'Chemistry',
     year: '2009',
     filePath: '/documents/gce/A-Level/Chemistry/2009/paper2.pdf',
+    examType: 'GCE',
+  },
+  {
+    id: 'gce-alevel-chem-2007-p3',
+    title: 'A-Level Chemistry Paper 3 2007',
+    level: 'A-Level',
+    subject: 'Chemistry',
+    year: '2007',
+    filePath: '/documents/gce/A-Level/Chemistry/2007/paper3.pdf',
     examType: 'GCE',
   },
 ];
