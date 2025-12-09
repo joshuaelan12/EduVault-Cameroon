@@ -29,7 +29,7 @@ const aLevelSubjects = [
   'Chemistry', 'Pure Mathematics with Mechanics', 'Pure Mathematics with Statistics', 
   'Physics', 'Biology', 'History', 'Geography', 'Economics', 'Computer Science', 'Literature in English'
 ];
-const availableYears = ['2024', '2023', '2022', '2021', '2020', '2019', '2018'];
+const availableYears = ['2024', '2023', '2022', '2021', '2020', '2019', '2018', '2015', '2013'];
 
 type Document = {
   id: string;
@@ -52,7 +52,51 @@ const documents: Document[] = [
     filePath: '/documents/gce/A-Level/Chemistry/2024/paper1.pdf',
     examType: 'GCE',
   },
-  // Add more documents here as needed
+  {
+    id: 'gce-alevel-chem-2020-p1',
+    title: 'A-Level Chemistry Paper 1 2020',
+    level: 'A-Level',
+    subject: 'Chemistry',
+    year: '2020',
+    filePath: '/documents/gce/A-Level/Chemistry/2020/paper1.pdf',
+    examType: 'GCE',
+  },
+  {
+    id: 'gce-alevel-chem-2019-p1',
+    title: 'A-Level Chemistry Paper 1 2019',
+    level: 'A-Level',
+    subject: 'Chemistry',
+    year: '2019',
+    filePath: '/documents/gce/A-Level/Chemistry/2019/paper1.pdf',
+    examType: 'GCE',
+  },
+  {
+    id: 'gce-alevel-chem-2018-p1',
+    title: 'A-Level Chemistry Paper 1 2018',
+    level: 'A-Level',
+    subject: 'Chemistry',
+    year: '2018',
+    filePath: '/documents/gce/A-Level/Chemistry/2018/paper1.pdf',
+    examType: 'GCE',
+  },
+  {
+    id: 'gce-alevel-chem-2015-p1',
+    title: 'A-Level Chemistry Paper 1 2015',
+    level: 'A-Level',
+    subject: 'Chemistry',
+    year: '2015',
+    filePath: '/documents/gce/A-Level/Chemistry/2015/paper1.pdf',
+    examType: 'GCE',
+  },
+  {
+    id: 'gce-alevel-chem-2013-p1',
+    title: 'A-Level Chemistry Paper 1 2013',
+    level: 'A-Level',
+    subject: 'Chemistry',
+    year: '2013',
+    filePath: '/documents/gce/A-Level/Chemistry/2013/paper1.pdf',
+    examType: 'GCE',
+  },
 ];
 
 export default function GcePage() {
