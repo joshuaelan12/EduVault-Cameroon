@@ -107,21 +107,7 @@ service cloud.firestore {
       allow create: if isOwner(userId) && incomingDataMatchesPathId(userId, 'id');
       allow update: if (isOwner(userId) || isAdmin()) && isExistingDoc() && internalIdIsImmutable('id');
       allow delete: if (isOwner(userId) || isAdmin()) && isExistingDoc();
-
-      /**
-       * @description User's uploaded documents. Only the owner or an admin can manage them.
-       * @path /users/{userId}/documents/{documentId}
-       * @allow (create) User `user_123` creates a new document in their own subcollection.
-       * @deny (list) User `user_abc` tries to list documents belonging to `user_xyz`.
-       * @principle Enforces strict ownership for all nested user data.
-       */
-      match /documents/{documentId} {
-        allow get, list: if isOwner(userId) || isAdmin();
-        allow create: if isOwner(userId) && incomingDataMatchesPathId(userId, 'uploadedBy');
-        allow update: if (isOwner(userId) || isAdmin()) && isExistingDoc() && internalIdIsImmutable('uploadedBy');
-        allow delete: if (isOwner(userId) || isAdmin()) && isExistingDoc();
-      }
-
+      
       /**
        * @description User's payment records. Only the owner or an admin can access them.
        * @path /users/{userId}/payments/{paymentId}
@@ -177,6 +163,18 @@ service cloud.firestore {
         allow update: if (isOwner(userId) || isAdmin()) && isExistingDoc() && internalIdIsImmutable('userId');
         allow delete: if (isOwner(userId) || isAdmin()) && isExistingDoc();
       }
+    }
+    
+    /**
+     * @description Publicly readable collection of documents. Any signed-in user can read.
+     * @path /documents/{documentId}
+     * @allow (list) Any signed-in user can list available documents.
+     * @deny (create) Only admins can add new documents (via a backend function, not client).
+     * @principle Secure-by-default for public data, admin-only writes.
+     */
+    match /documents/{documentId} {
+      allow get, list: if isSignedIn();
+      allow create, update, delete: if isAdmin();
     }
 
 
@@ -359,3 +357,5 @@ service cloud.firestore {
     }
   }
 }
+
+    

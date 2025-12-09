@@ -755,18 +755,14 @@
         }
       },
       {
-        "path": "/users/{userId}/documents/{documentId}",
+        "path": "/documents/{documentId}",
         "definition": {
           "entityName": "document",
           "schema": {
             "$ref": "#/backend/entities/Document"
           },
-          "description": "Stores metadata for documents uploaded by a specific user. The 'uploadedBy' field should match the userId parameter. Includes denormalized 'userId' from the parent user document for authorization independence.",
+          "description": "Stores metadata for all publicly available documents.",
           "params": [
-            {
-              "name": "userId",
-              "description": "The unique identifier for the user who uploaded the document."
-            },
             {
               "name": "documentId",
               "description": "The unique identifier for the document."
@@ -1066,3 +1062,4 @@
     "reasoning": "The Firestore data structure is designed to prioritize authorization independence, clarity, and scalability. It adheres to the principles of DBAC (Database-Based Access Control) using `request.auth.uid` and avoids complex hierarchical authorization dependencies. The structure facilitates secure list operations through structural segregation and membership maps where necessary.\n\n**Authorization Independence (CRITICAL):**\n*   User roles are stored directly in the `users` document (`/users/{userId}`).\n*   Access to user-owned data (documents, payments, downloads, rate limits, notifications, access logs) is controlled via hierarchical paths, eliminating the need for `get()` calls in security rules. For instance, documents uploaded by a user are stored under `/users/{userId}/documents/{documentId}`.\n\n**Structural Segregation (Homogeneous Security Posture):**\n*   The `users` collection stores user data.\n*   Documents are organized under the respective user, ensuring consistent ownership. Public documents could be put in a `/documents` collection with a `visibility` field, ensuring only active users can view them. A suggested alternative is to create a separate collection `/public_documents` and `/private_documents`. Segregating them makes it clear to the user what they have access to.\n*   Admin-related data (audit logs, role audits, price changes) are stored separately and can be secured using specific roles.\n*   Global configuration settings and email templates are stored in dedicated collections with appropriate security restrictions.\n\n**Access Modeling (Standardization and Consistency):**\n*   User-owned data follows the `/users/{userId}/...` pattern.\n*   Admin roles are managed via the `/roles_admin/{uid}` collection. A user's UID existing as a document ID in this collection grants admin privileges. This approach relies on **Existence over Content**, as recommended.\n\n**QAPs (Rules are not Filters):**\n*   Secure `list` operations are supported by the structure.  For example, listing a user's documents is done via a collection group query on `/users/{userId}/documents`. The security rules can easily verify `request.auth.uid == userId`.\n\n**Invariants:**\n*   Timestamps (createdAt, updatedAt) can be enforced in rules.\n*   The structure supports the integrity of ownership (e.g., a document's `uploadedBy` field matches the user ID in the path).\n\nThis design ensures straightforward security rules, avoids complex queries, and enables atomic operations, leading to a robust and maintainable application."
   }
 }
+    
