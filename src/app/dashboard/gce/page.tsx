@@ -27,10 +27,14 @@ const oLevelSubjects = [
   'History', 'Geography', 'Economics', 'Computer Science', 'French'
 ];
 const aLevelSubjects = [
-  'Chemistry', 'Pure Mathematics with Mechanics', 'Pure Mathematics with Statistics', 
-  'Physics', 'Biology', 'History', 'Geography', 'Economics', 'Computer Science', 'Information and Communication Technology', 'Literature in English'
+  'Chemistry', 'Pure Mathematics with Mechanics', 'Computer Science', 'Information and Communication Technology',
+  'Physics', 'Biology', 'Food Science and Nutrition', 'Religious Studies', 'Geography'
 ];
-const availableYears = ['2024', '2023', '2022', '2021', '2020', '2019', '2018', '2016', '2015', '2013', '2012', '2010', '2009', '2007'];
+const availableYears = [
+  '2024', '2023', '2022', '2021', '2020', '2019', '2018', '2017', '2016', '2015', '2014', 
+  '2013', '2012', '2011', '2010', '2009', '2008', '2007', '2006', '2005', '2004', '2003', 
+  '2002', '2001', '2000'
+];
 
 type Document = {
   id: string;
@@ -359,6 +363,79 @@ const documents: Document[] = [
     filePath: '/documents/gce/A-Level/Information and Communication Technology/2024/paper2.pdf',
     examType: 'GCE',
   },
+  // Physics
+  ...Array.from({ length: 16 }, (_, i) => 2001 + i).map(year => ({
+    id: `gce-alevel-phy-${year}-p2`,
+    title: `A-Level Physics Paper 2 ${year}`,
+    level: 'A-Level' as const,
+    subject: 'Physics',
+    year: `${year}`,
+    filePath: `/documents/gce/A-Level/Physics/${year}/paper2.pdf`,
+    examType: 'GCE' as const,
+  })),
+  { id: 'gce-alevel-phy-2019-p2', title: 'A-Level Physics Paper 2 2019', level: 'A-Level', subject: 'Physics', year: '2019', filePath: '/documents/gce/A-Level/Physics/2019/paper2.pdf', examType: 'GCE' },
+  // Biology
+  { id: 'gce-alevel-bio-2020-p1', title: 'A-Level Biology Paper 1 2020', level: 'A-Level', subject: 'Biology', year: '2020', filePath: '/documents/gce/A-Level/Biology/2020/paper1.pdf', examType: 'GCE' },
+  ...[2000, 2001, 2003, 2004, 2005, 2019, 2024].map(year => ({
+    id: `gce-alevel-bio-${year}-p2`,
+    title: `A-Level Biology Paper 2 ${year}`,
+    level: 'A-Level' as const,
+    subject: 'Biology',
+    year: `${year}`,
+    filePath: `/documents/gce/A-Level/Biology/${year}/paper2.pdf`,
+    examType: 'GCE' as const,
+  })),
+  { id: 'gce-alevel-bio-2016-p3', title: 'A-Level Biology Paper 3 2016', level: 'A-Level', subject: 'Biology', year: '2016', filePath: '/documents/gce/A-Level/Biology/2016/paper3.pdf', examType: 'GCE' },
+  // Food Science and Nutrition
+  { id: 'gce-alevel-fsn-2024-p1', title: 'A-Level Food Science and Nutrition Paper 1 2024', level: 'A-Level', subject: 'Food Science and Nutrition', year: '2024', filePath: '/documents/gce/A-Level/Food Science and Nutrition/2024/paper1.pdf', examType: 'GCE' },
+  // Religious Studies
+  ...[2019, 2020].map(year => ({
+    id: `gce-alevel-rs-${year}-p1`,
+    title: `A-Level Religious Studies Paper 1 ${year}`,
+    level: 'A-Level' as const,
+    subject: 'Religious Studies',
+    year: `${year}`,
+    filePath: `/documents/gce/A-Level/Religious Studies/${year}/paper1.pdf`,
+    examType: 'GCE' as const,
+  })),
+  ...[2018, 2019].map(year => ({
+    id: `gce-alevel-rs-${year}-p2`,
+    title: `A-Level Religious Studies Paper 2 ${year}`,
+    level: 'A-Level' as const,
+    subject: 'Religious Studies',
+    year: `${year}`,
+    filePath: `/documents/gce/A-Level/Religious Studies/${year}/paper2.pdf`,
+    examType: 'GCE' as const,
+  })),
+  { id: 'gce-alevel-rs-2019-p3', title: 'A-Level Religious Studies Paper 3 2019', level: 'A-Level', subject: 'Religious Studies', year: '2019', filePath: '/documents/gce/A-Level/Religious Studies/2019/paper3.pdf', examType: 'GCE' },
+  // Geography
+  ...[2015, 2017, 2018, 2019, 2020].map(year => ({
+    id: `gce-alevel-geo-${year}-p1`,
+    title: `A-Level Geography Paper 1 ${year}`,
+    level: 'A-Level' as const,
+    subject: 'Geography',
+    year: `${year}`,
+    filePath: `/documents/gce/A-Level/Geography/${year}/paper1.pdf`,
+    examType: 'GCE' as const,
+  })),
+  ...Array.from({ length: 5 }, (_, i) => 2015 + i).map(year => ({
+    id: `gce-alevel-geo-${year}-p2`,
+    title: `A-Level Geography Paper 2 ${year}`,
+    level: 'A-Level' as const,
+    subject: 'Geography',
+    year: `${year}`,
+    filePath: `/documents/gce/A-Level/Geography/${year}/paper2.pdf`,
+    examType: 'GCE' as const,
+  })),
+  ...[2015, 2016, 2017, 2019, 2024].map(year => ({
+    id: `gce-alevel-geo-${year}-p3`,
+    title: `A-Level Geography Paper 3 ${year}`,
+    level: 'A-Level' as const,
+    subject: 'Geography',
+    year: `${year}`,
+    filePath: `/documents/gce/A-Level/Geography/${year}/paper3.pdf`,
+    examType: 'GCE' as const,
+  })),
 ];
 
 export default function GcePage() {
