@@ -4,7 +4,7 @@ import { useUser, useFirestore, useDoc, useMemoFirebase, useAuth } from '@/fireb
 import { usePathname, useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 import { doc } from 'firebase/firestore';
-import { GraduationCap, LogOut, School, BookOpen } from 'lucide-react';
+import { GraduationCap, LogOut, School, BookOpen, Sparkles } from 'lucide-react';
 import {
   SidebarProvider,
   Sidebar,
@@ -125,6 +125,14 @@ export default function DashboardLayout({
                 <Link href="/dashboard/ub">
                   <School />
                   Univ. of Buea
+                </Link>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+             <SidebarMenuItem>
+              <SidebarMenuButton href="/dashboard/ai-tutor" asChild>
+                <Link href="/dashboard/ai-tutor">
+                  <Sparkles />
+                  AI Tutor
                 </Link>
               </SidebarMenuButton>
             </SidebarMenuItem>
