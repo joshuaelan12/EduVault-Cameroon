@@ -36,7 +36,11 @@ export function Announcements() {
     const now = new Date();
     return announcements.filter(ann => {
         const startDate = new Date(ann.startAt.seconds * 1000);
+        startDate.setHours(0, 0, 0, 0); // Normalize to start of day for accurate comparison
+
         const endDate = new Date(ann.endAt.seconds * 1000);
+        endDate.setHours(23, 59, 59, 999); // Set to the very end of the selected day
+
         return startDate <= now && endDate >= now;
     });
   }, [announcements]);
