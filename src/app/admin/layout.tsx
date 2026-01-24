@@ -1,4 +1,3 @@
-
 'use client';
 
 import {
@@ -17,9 +16,9 @@ import Link from 'next/link';
 import { useUser } from '@/firebase';
 import { getAuth, signOut } from 'firebase/auth';
 import { Button } from '@/components/ui/button';
-import { LayoutDashboard, Users, LogOut, GraduationCap } from 'lucide-react';
+import { Users, LogOut, GraduationCap, Megaphone } from 'lucide-react';
 import { useAdmin } from '@/hooks/use-admin';
-import { useRouter } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
 import { useEffect } from 'react';
 
 export default function AdminLayout({
@@ -31,6 +30,7 @@ export default function AdminLayout({
   const { isAdmin, isAdminLoading } = useAdmin();
   const auth = getAuth();
   const router = useRouter();
+  const pathname = usePathname();
 
   useEffect(() => {
     if (!isUserLoading && !isAdminLoading) {
@@ -76,10 +76,18 @@ export default function AdminLayout({
         <SidebarContent>
           <SidebarMenu>
             <SidebarMenuItem>
-              <SidebarMenuButton href="/admin" asChild isActive={true}>
+              <SidebarMenuButton href="/admin" asChild isActive={pathname === '/admin'}>
                 <Link href="/admin">
                   <Users />
                   User Management
+                </Link>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+             <SidebarMenuItem>
+              <SidebarMenuButton href="/admin/announcements" asChild isActive={pathname === '/admin/announcements'}>
+                <Link href="/admin/announcements">
+                  <Megaphone />
+                  Announcements
                 </Link>
               </SidebarMenuButton>
             </SidebarMenuItem>
