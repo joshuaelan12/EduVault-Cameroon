@@ -28,7 +28,7 @@ const oLevelSubjects = [
 ];
 const aLevelSubjects = [
   'Chemistry', 'Pure Mathematics with Mechanics', 'Computer Science', 'Information and Communication Technology',
-  'Physics', 'Biology', 'Food Science and Nutrition', 'Religious Studies', 'Geography'
+  'Physics', 'Biology', 'Food Science and Nutrition', 'Religious Studies', 'Geography', 'Further Mathematics'
 ];
 const availableYears = [
   '2024', '2023', '2022', '2021', '2020', '2019', '2018', '2017', '2016', '2015', '2014', 
@@ -436,6 +436,15 @@ const documents: Document[] = [
     filePath: `/documents/gce/A-Level/Geography/${year}/paper3.pdf`,
     examType: 'GCE' as const,
   })),
+  {
+    id: 'gce-alevel-fm-2020-p1',
+    title: 'A-Level Further Mathematics Paper 1 2020',
+    level: 'A-Level',
+    subject: 'Further Mathematics',
+    year: '2020',
+    filePath: '/documents/gce/A-Level/Further Mathematics/2020/paper1.pdf',
+    examType: 'GCE',
+  },
 ];
 
 export default function GcePage() {
