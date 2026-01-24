@@ -1,7 +1,7 @@
 'use client';
 
 import { useFirestore, useCollection, useMemoFirebase } from '@/firebase';
-import { collection, query, orderBy, limit } from 'firebase/firestore';
+import { collection, query, orderBy, limit, where, Timestamp } from 'firebase/firestore';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Bell } from 'lucide-react';
@@ -24,6 +24,7 @@ export function Announcements() {
     // So we'll fetch the 5 most recent announcements that have started.
     return query(
         collection(firestore, 'announcements'),
+        where('startAt', '<=', Timestamp.now()), // Only fetch announcements that have already started
         orderBy('startAt', 'desc'),
         limit(5)
     );
@@ -34,14 +35,11 @@ export function Announcements() {
   const activeAnnouncements = useMemo(() => {
     if (!announcements) return [];
     const now = new Date();
+    // Since the query already filters by start date, we only need to filter by end date.
     return announcements.filter(ann => {
-        const startDate = new Date(ann.startAt.seconds * 1000);
-        startDate.setHours(0, 0, 0, 0); // Normalize to start of day for accurate comparison
-
         const endDate = new Date(ann.endAt.seconds * 1000);
         endDate.setHours(23, 59, 59, 999); // Set to the very end of the selected day
-
-        return startDate <= now && endDate >= now;
+        return endDate >= now;
     });
   }, [announcements]);
 
