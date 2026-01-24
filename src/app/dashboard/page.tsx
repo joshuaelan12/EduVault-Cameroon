@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useUser, useFirestore, useDoc, useMemoFirebase, useAuth } from '@/firebase';
@@ -11,6 +10,7 @@ import { GraduationCap, LogOut, Wallet, MessageSquare } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { signOut } from 'firebase/auth';
+import { Announcements } from '@/components/dashboard/Announcements';
 
 // Explicitly type the user object based on your backend.json entity
 type UserData = {
@@ -99,21 +99,29 @@ function UserDashboard({ user }: { user: UserData }) {
                 <h1 className="text-3xl font-bold tracking-tight">Welcome, {user.fullName}!</h1>
                 <p className="text-muted-foreground">This is your dashboard. You can start searching for past questions now.</p>
             </div>
-            <Card>
-                <CardHeader>
-                    <CardTitle>Your Account</CardTitle>
-                </CardHeader>
-                <CardContent>
-                    <p>Status: <span className="font-semibold text-green-600">Active</span></p>
-                    <p className="text-muted-foreground text-sm">You have full access to all resources.</p>
-                </CardContent>
-                 <CardFooter>
-                    <Button variant="outline" onClick={handleLogout}>
-                        <LogOut className="mr-2 h-4 w-4" />
-                        Logout
-                    </Button>
-                </CardFooter>
-            </Card>
+            
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <div className="lg:col-span-2">
+                    <Announcements />
+                </div>
+                <div>
+                     <Card>
+                        <CardHeader>
+                            <CardTitle>Your Account</CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                            <p>Status: <span className="font-semibold text-green-600">Active</span></p>
+                            <p className="text-muted-foreground text-sm">You have full access to all resources.</p>
+                        </CardContent>
+                         <CardFooter>
+                            <Button variant="outline" onClick={handleLogout}>
+                                <LogOut className="mr-2 h-4 w-4" />
+                                Logout
+                            </Button>
+                        </CardFooter>
+                    </Card>
+                </div>
+            </div>
         </div>
     )
 }
