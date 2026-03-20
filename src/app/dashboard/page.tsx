@@ -6,7 +6,7 @@ import { useEffect } from 'react';
 import { doc } from 'firebase/firestore';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { GraduationCap, LogOut, Wallet, MessageSquare } from 'lucide-react';
+import { GraduationCap, LogOut, Wallet, MessageSquare, Smartphone } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { signOut } from 'firebase/auth';
@@ -53,11 +53,20 @@ function ActivationPage() {
                         <p className="text-muted-foreground">
                             Please send the activation fee via Mobile Money to:
                         </p>
-                        <ul className="space-y-2 text-sm">
+                        <ul className="space-y-2 text-sm mb-4">
                             <li><strong className="font-medium">Provider:</strong> MTN Mobile Money</li>
                             <li><strong className="font-medium">Number:</strong> 654834766</li>
                             <li><strong className="font-medium">Name:</strong> Maisa Elangwe Theophilus</li>
                         </ul>
+                        <Button className="w-full bg-green-600 hover:bg-green-700 text-white font-bold" asChild>
+                            <a href="tel:*126*9*654834766*500%23">
+                                <Smartphone className="mr-2 h-5 w-5" />
+                                Pay Now (Dial Code)
+                            </a>
+                        </Button>
+                        <p className="text-[10px] text-center text-muted-foreground mt-2">
+                            Clicking "Pay Now" will open your phone dialer with the transaction code pre-filled.
+                        </p>
                     </div>
                      <div className="space-y-4 rounded-lg border bg-card p-4">
                         <h3 className="font-semibold">Step 2: Verification</h3>
