@@ -5,15 +5,17 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { Loader2, Sparkles } from 'lucide-react';
+import { Loader2, Sparkles, AlertCircle } from 'lucide-react';
 import { askAiTutor } from '@/ai/flows/ai-tutor-flow';
 import { useToast } from '@/hooks/use-toast';
 import { Skeleton } from '@/components/ui/skeleton';
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
 export default function AiTutorPage() {
   const [question, setQuestion] = useState('');
   const [answer, setAnswer] = useState('');
   const [isGenerating, setIsGenerating] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const { toast } = useToast();
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -28,17 +30,24 @@ export default function AiTutorPage() {
     }
 
     setIsGenerating(true);
-    setAnswer(''); // Clear previous answer
+    setError(null);
+    setAnswer(''); 
 
     try {
       const response = await askAiTutor({ question });
-      setAnswer(response.answer);
-    } catch (error: any) {
-      console.error('AI Tutor error:', error);
+      if (response && response.answer) {
+        setAnswer(response.answer);
+      } else {
+        throw new Error('No response received from the AI tutor.');
+      }
+    } catch (err: any) {
+      console.error('AI Tutor error:', err);
+      const errorMessage = err.message || 'Could not get an answer from the AI tutor. This might be due to a server timeout or missing configuration on the host.';
+      setError(errorMessage);
       toast({
         variant: 'destructive',
-        title: 'Uh oh! Something went wrong.',
-        description: error.message || 'Could not get an answer from the AI tutor.',
+        title: 'AI Tutor Error',
+        description: errorMessage,
       });
     } finally {
       setIsGenerating(false);
@@ -54,12 +63,25 @@ export default function AiTutorPage() {
         </p>
       </div>
 
+      {error && (
+        <Alert variant="destructive">
+          <AlertCircle className="h-4 w-4" />
+          <AlertTitle>Configuration Error</AlertTitle>
+          <AlertDescription>
+            {error}
+            <p className="mt-2 text-xs opacity-80">
+              Note: If this is on Netlify, ensure the <b>GOOGLE_GENAI_API_KEY</b> environment variable is set in the site settings.
+            </p>
+          </AlertDescription>
+        </Alert>
+      )}
+
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <Card>
           <CardHeader>
             <CardTitle>Ask a Question</CardTitle>
             <CardDescription>
-              Whether it's a complex math problem or a historical query, our AI is here to help.
+              Whether it&apos;s a complex math problem or a historical query, our AI is here to help.
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -81,15 +103,15 @@ export default function AiTutorPage() {
                 ) : (
                   <Sparkles className="mr-2 h-4 w-4" />
                 )}
-                {isGenerating ? 'Getting Answer...' : 'Ask AI'}
+                {isGenerating ? 'Consulting the AI...' : 'Ask AI'}
               </Button>
             </form>
           </CardContent>
         </Card>
 
-        <Card className="flex flex-col">
+        <Card className="flex flex-col min-h-[300px]">
           <CardHeader>
-            <CardTitle>AI's Answer</CardTitle>
+            <CardTitle>AI&apos;s Answer</CardTitle>
             <CardDescription>The response from the AI tutor will appear below.</CardDescription>
           </CardHeader>
           <CardContent className="flex-grow">
@@ -102,13 +124,13 @@ export default function AiTutorPage() {
               </div>
             ) : answer ? (
               <div
-                className="text-sm text-foreground"
+                className="text-sm text-foreground leading-relaxed"
                 style={{ whiteSpace: 'pre-wrap' }}
               >
                 {answer}
               </div>
             ) : (
-              <div className="flex items-center justify-center h-full text-sm text-muted-foreground">
+              <div className="flex items-center justify-center h-full text-sm text-muted-foreground border-2 border-dashed rounded-lg">
                 Your answer will be displayed here.
               </div>
             )}
