@@ -1,3 +1,4 @@
+
 import Link from "next/link";
 
 export default function Footer() {
@@ -8,7 +9,7 @@ export default function Footer() {
       <div className="container flex flex-col items-center justify-between gap-4 py-10 md:h-24 md:flex-row md:py-0">
         <div className="flex flex-col items-center gap-4 px-8 text-center md:flex-row md:gap-2 md:px-0 md:text-left">
           <p className="text-sm leading-loose text-muted-foreground">
-            &copy; {currentYear} EduVault Cameroon. All rights reserved.
+            &copy; {currentYear} Cameroon Past Questions. All rights reserved.
           </p>
            <span className="hidden md:inline-block">|</span>
            <p className="text-sm text-muted-foreground">

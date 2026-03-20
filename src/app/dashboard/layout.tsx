@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useUser, useFirestore, useDoc, useMemoFirebase, useAuth } from '@/firebase';
@@ -53,9 +54,6 @@ export default function DashboardLayout({
       return;
     }
 
-    // If the user's data is loaded and they are not active,
-    // and they are trying to access a page other than the main dashboard page,
-    // redirect them back to the main dashboard page to see the activation prompt.
     if (userData && !userData.isActive && pathname !== '/dashboard') {
       router.replace('/dashboard');
     }
@@ -66,7 +64,6 @@ export default function DashboardLayout({
     router.push('/login');
   };
 
-  // Show a loading screen while we verify the user's auth and activation status.
   const isLoading = isUserLoading || isDocLoading;
   if (isLoading || !user) {
     return (
@@ -79,9 +76,6 @@ export default function DashboardLayout({
     );
   }
   
-  // If a user is not active and is on a protected page, the useEffect will redirect.
-  // We render the children (or null if they get redirected) but prevent access to the full UI.
-  // The main /dashboard page has its own logic to show the activation prompt.
   if (userData && !userData.isActive && pathname !== '/dashboard') {
     return (
         <div className="flex h-screen w-full items-center justify-center bg-background">
@@ -99,7 +93,7 @@ export default function DashboardLayout({
         <SidebarHeader>
           <div className="flex items-center gap-2">
             <GraduationCap className="h-6 w-6 text-primary" />
-            <span className="font-semibold text-lg">EduVault</span>
+            <span className="font-semibold text-lg">Cameroon PQ</span>
           </div>
         </SidebarHeader>
         <SidebarContent>
@@ -149,7 +143,7 @@ export default function DashboardLayout({
         <header className="flex h-14 items-center justify-between border-b bg-background px-4 md:justify-end">
             <Link href="/dashboard" className="flex items-center gap-2 font-semibold md:hidden">
                 <GraduationCap className="h-6 w-6 text-primary" />
-                <span className="">EduVault</span>
+                <span className="">Cameroon PQ</span>
             </Link>
             <SidebarTrigger className="md:hidden">
                 <span className="sr-only">Toggle Menu</span>

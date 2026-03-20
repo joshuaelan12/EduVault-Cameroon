@@ -1,3 +1,4 @@
+
 import {
   Accordion,
   AccordionContent,
@@ -7,8 +8,8 @@ import {
 
 const faqs = [
   {
-    question: "What is EduVault Cameroon?",
-    answer: "EduVault Cameroon is an online platform that provides students with access to a vast library of past examination questions from various Cameroonian examination bodies like the GCE Board, University of Buea, and University of Bamenda.",
+    question: "What is Cameroon Past Questions?",
+    answer: "Cameroon Past Questions is an online platform that provides students with access to a vast library of past examination questions from various Cameroonian examination bodies like the GCE Board, University of Buea, and University of Bamenda.",
   },
   {
     question: "How much does it cost?",

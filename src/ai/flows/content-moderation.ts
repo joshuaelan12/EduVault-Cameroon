@@ -1,3 +1,4 @@
+
 'use server';
 
 /**
@@ -39,7 +40,7 @@ const moderateContentPrompt = ai.definePrompt({
   name: 'moderateContentPrompt',
   input: {schema: ModerateContentInputSchema},
   output: {schema: ModerateContentOutputSchema},
-  prompt: `You are an AI-powered content moderation tool for EduVault Cameroon, an educational resource platform.
+  prompt: `You are an AI-powered content moderation tool for Cameroon Past Questions, an educational resource platform.
 
   Your task is to analyze document metadata and content to identify potential copyright violations or miscategorization.
 

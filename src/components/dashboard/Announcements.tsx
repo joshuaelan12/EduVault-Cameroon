@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useFirestore, useCollection, useMemoFirebase } from '@/firebase';
@@ -12,19 +13,17 @@ type Announcement = {
     id: string;
     title: string;
     message: string;
-    startAt: { seconds: number; nanoseconds: number; }; // Firestore timestamp
-    endAt: { seconds: number; nanoseconds: number; }; // Firestore timestamp
+    startAt: { seconds: number; nanoseconds: number; }; 
+    endAt: { seconds: number; nanoseconds: number; }; 
 };
 
 export function Announcements() {
   const firestore = useFirestore();
 
   const announcementsQuery = useMemoFirebase(() => {
-    // We only want to show announcements that are currently active.
-    // So we'll fetch the 5 most recent announcements that have started.
     return query(
         collection(firestore, 'announcements'),
-        where('startAt', '<=', Timestamp.now()), // Only fetch announcements that have already started
+        where('startAt', '<=', Timestamp.now()),
         orderBy('startAt', 'desc'),
         limit(5)
     );
@@ -35,10 +34,9 @@ export function Announcements() {
   const activeAnnouncements = useMemo(() => {
     if (!announcements) return [];
     const now = new Date();
-    // Since the query already filters by start date, we only need to filter by end date.
     return announcements.filter(ann => {
         const endDate = new Date(ann.endAt.seconds * 1000);
-        endDate.setHours(23, 59, 59, 999); // Set to the very end of the selected day
+        endDate.setHours(23, 59, 59, 999); 
         return endDate >= now;
     });
   }, [announcements]);
@@ -51,7 +49,7 @@ export function Announcements() {
             <Bell className="w-5 h-5" />
             Latest Announcements
         </CardTitle>
-        <CardDescription>Stay updated with the latest news from EduVault.</CardDescription>
+        <CardDescription>Stay updated with the latest news from Cameroon Past Questions.</CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
         {isLoading ? (

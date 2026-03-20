@@ -1,3 +1,4 @@
+
 'use client';
 
 import Link from 'next/link';
@@ -24,7 +25,7 @@ export default function Header() {
       <div className="container flex h-14 items-center">
         <Link href="/" className="mr-6 flex items-center space-x-2">
           <GraduationCap className="h-6 w-6 text-primary" />
-          <span className="font-bold inline-block">EduVault Cameroon</span>
+          <span className="font-bold inline-block">Cameroon Past Questions</span>
         </Link>
         <nav className="hidden md:flex items-center space-x-6 text-sm font-medium">
           {navLinks.map((link) => (
@@ -59,7 +60,7 @@ export default function Header() {
                 <div className="flex items-center mb-8">
                   <Link href="/" className="mr-6 flex items-center space-x-2" onClick={() => setIsSheetOpen(false)}>
                     <GraduationCap className="h-6 w-6 text-primary" />
-                    <span className="font-bold">EduVault Cameroon</span>
+                    <span className="font-bold">Cameroon Past Questions</span>
                   </Link>
                 </div>
                 <div className="flex flex-col space-y-3">
